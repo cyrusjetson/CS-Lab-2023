@@ -1,0 +1,787 @@
+Script started on Thu 18 Feb 2021 11:31:37 PM IST
+//Jetson Cyrus J
+//19bcs150
+ 
+[19bcs150@mepcolinux ex1]$cat AL.h
+#include<string>
+using namespace std;
+class Student
+{
+  int rollNo;
+  string name;
+  float cgpa;
+  public:
+    friend class A_List;
+    Student();
+    Student(int,string,float);
+    Student(const Student&);
+    void getDetails(int,string,float);
+    friend void display(Student);
+};
+
+class A_List
+{
+  Student *studentsArray;
+  int capacity;
+  int size;
+  public:
+    A_List();
+    A_List(Student*,int,int);
+    A_List(const A_List &);
+    void setDetails(Student*,int,int);
+    int isFull();
+    int isEmpty();
+    int insertAtFirst(Student);
+    int insertAtLast(Student);
+    int insertByPos(Student,int);
+    int deleteAtFirst();
+    int deleteAtLast();
+    int displayList();
+    int makeListEmpty();
+    int searchAtFirst();
+    int searchAnElt(int);
+};
+[19bcs150@mepcolinux ex1]$cat ALimp.cpp
+#include"AL.h"
+#include<iostream>
+using namespace std;
+Student::Student()
+{
+  rollNo=0;
+  name=" ";
+  cgpa=0.1;
+}
+
+Student::Student(int rollNoTemp,string nameTemp,float cgpaTemp)
+{
+  rollNo=rollNoTemp;
+  name=nameTemp;
+  cgpa=cgpaTemp;
+}
+
+void display(Student S1)
+{
+  cout<<"\n RollNo = "<<S1.rollNo;
+  cout<<"\n Name = "<<S1.name;
+  cout<<"\n CGPA = "<<S1.cgpa;
+  cout<<"\n";
+}
+
+Student::Student(const Student& ref)
+{
+  rollNo=ref.rollNo;
+  name=ref.name;
+  cgpa= ref.cgpa;
+}
+
+void Student::getDetails(int rollNoTemp,string nameTemp,float cgpaTemp)
+{
+  rollNo=rollNoTemp;
+  name=nameTemp;
+  cgpa=cgpaTemp;
+}
+
+A_List::A_List()
+{
+  capacity=0;
+  size=0;
+  studentsArray =new Student[capacity];
+}
+
+A_List::A_List(Student* arr,int capacityTemp,int sizeTemp)
+{
+  int i;
+  capacity=capacityTemp;
+  size=sizeTemp;
+  for(i=0;i<size;i++){
+    studentsArray[i]=arr[i];
+  }
+}
+
+A_List::A_List(const A_List& ref)
+{
+  int j;
+  capacity=ref.capacity;
+  size=ref.size;
+  for(j=0;j<ref.size;j++)
+  {
+    studentsArray[j]=ref.studentsArray[j];
+  }
+}
+
+int A_List:: isFull()
+{
+  if(capacity== size)
+    return 1;
+  else
+    return 0;
+}
+
+int A_List:: isEmpty()
+{
+  if(size==0)
+    return 1;
+  else
+    return 0;
+}
+
+int A_List:: insertAtFirst(Student element)
+{
+  if(isFull()==0)
+  {
+    if(isEmpty()==1)
+    {
+      studentsArray[size++] = element;
+    }
+    else
+    {
+      for(int i=size-1; i>=0; i--)
+      {
+        studentsArray[i+1] = studentsArray[i];
+      }
+      studentsArray[0] = element;
+      size++;
+    }
+    return 1;
+  }
+  else
+    return 0;
+}
+
+int A_List:: insertAtLast(Student element)
+{
+  if(isFull()==0)
+  {
+    studentsArray[size++] = element;
+    return 1;
+  }
+  else
+    return 0;
+}
+
+int A_List::insertByPos(Student element, int pos)
+{
+  int i;
+  if(isFull()==0)
+  {
+    if(pos > size+1)
+      return -2;
+    else
+    {
+      if((isEmpty()==1) && pos == 1)
+      {
+         insertAtFirst(element);
+      }
+      else if((isEmpty()==1) && pos!=1)
+        return -3;
+      else
+      {
+        for(i = size; i>pos-2;i--)
+        studentsArray[i+1] = studentsArray[i];
+        studentsArray[i+1] = element;
+        size++;
+      }
+      return 1;
+    }
+  }
+  else
+     return 0;
+}
+
+void A_List::setDetails(Student* arr,int capacityTemp,int sizeTemp)
+{
+  capacity=capacityTemp;size=sizeTemp;
+  studentsArray= new Student[capacity];
+  for(int i=0;i<size;i++)
+  {
+    studentsArray[i]=arr[i];
+  }
+}
+
+int A_List::deleteAtFirst()
+{
+  if(isEmpty()==0)
+  {
+    for(int i=0; i<size;i++)
+      studentsArray[i] = studentsArray[i+1];
+    size--;
+    return 1;
+  }
+  else
+     return -13;
+}
+
+int A_List::deleteAtLast()
+{
+  if(isEmpty()==0)
+  {
+    studentsArray[size-1].name="";
+    studentsArray[size-1].rollNo=0;
+    studentsArray[size-1].cgpa=0.1;
+    size=size-1;
+    return 1;
+  }
+  else
+     return -1;
+}
+
+int A_List::displayList()
+{
+  if(isEmpty()==0)
+  {
+    cout<<"\nStudent details:\nRollno\t CGPA\t\t Name\n";
+    for(int i=0; i<size; i++)
+    {
+        cout<<studentsArray[i].rollNo<<"\t"<<studentsArray[i].cgpa<<"\t\t"<<studentsArray[i].name<<"\n";
+    }
+    cout<<"\n";
+    return 1;
+  }
+  else
+    return -1;
+}
+
+int A_List::makeListEmpty()
+{
+  while(isEmpty()==0)
+  {
+     deleteAtFirst();
+  }
+  return 1;
+}
+
+int A_List::searchAtFirst()
+{
+  if(isEmpty()==0)
+  {
+     display(studentsArray[0]);
+     return 1;
+  }
+  else
+     return -1;
+}
+
+int A_List::searchAnElt(int key)
+{
+  if(isEmpty()==0)
+  {
+    for(int i= 0; i<size; i++)
+    {
+      if(studentsArray[i].rollNo==key)
+      {
+         display(studentsArray[i]);
+         return i;
+      }
+    }
+    return -2;
+  }
+  else
+    return -1;
+}
+
+[19bcs150@mepcolinux ex1]$cat ALapp.cpp
+#include"AL.h"
+#include<iostream>
+using namespace std;
+int main()
+{
+  int noOfStudents,count,rollNo,capacity,size,option;
+  float cgpa;
+  string name;
+  cout<<"\t ~~~~~ Student Details Management System ~~~~~\n";
+  cout<<"\nEnter maximum student Details you like to store(NOTE: you can't store more than this maximum)\n";
+  cin>>capacity;
+  cout<<"\nEnter how many student details have to upload(NOTE: It must be ";
+  cout<<"less than the above entered value or equal to that value):\n ";
+  cin>>noOfStudents;
+  size = noOfStudents;
+  Student *studentArray= new Student[noOfStudents];
+  for(int i = 0;i < noOfStudents; i++)
+  {
+    cout<<"\nEnter "<< i+1<<"student's details( Name,RollNo,CGPA ):\n";
+    cin >> name;
+    cin >> rollNo;
+    cin >> cgpa;
+    studentArray[i].getDetails(rollNo,name,cgpa);
+  }
+  A_List listOfDetails;
+  listOfDetails.setDetails(studentArray,capacity,size);
+  do
+  {
+    cout<<"\n\nSelect which operation you like to perform...\n 1.isFull\n 2.isEmpty\n 3.insertAtFirst\n";
+    cout<<" 4.insertAtLast\n 5.insertByPosition\n 6.deleteAtFirst\n 7.deleteAtLast\n ";
+    cout<<"8.displayList\n 9.MakeListEmpty\n 10.searchAtFirst\n 11.searchAnElement\n 12.Exit\n ";
+    cout<<"Enter your choice: ";
+    cin>>option;
+    {
+      if(option==1){
+      if( listOfDetails.isFull() == 1)
+         cout<<"\n ~~ isFull ~~ \n List is full\n";
+      else
+         cout<<"\n ~~ isFull ~~ \n List is not full\n";
+      }
+      else if(option==2){
+        if( listOfDetails.isEmpty() == 1)
+           cout<<"\n ~~ isEmpty ~~ \n List is Empty\n";
+        else
+           cout<<"\n ~~ isEmpty ~~ \n List is not Empty\n";
+      }
+      else if (option==3) {
+         cout<<"\nEnter student's details to perform insertAtFirst operation( RollNo,Name,CGPA ):\n ";
+         cin >> rollNo;
+         cin >> name;
+         cin >> cgpa;
+         Student tempStudent;
+         tempStudent.getDetails(rollNo,name,cgpa);
+         if(listOfDetails.insertAtFirst(tempStudent)==1)
+           cout<<"\n Successfully inserted at first\n";
+         else
+           cout<<"\n Insertion at first operation is failed because U exeeds the maximum\n";
+     }
+     else if(option==4){
+       cout<<"\nEnter student's details to perform insertAtLast operation( RollNo,Name,CGPA ):\n ";
+       cin >> rollNo;
+       cin >> name;
+       cin >> cgpa;
+       Student tempStudent1;
+       tempStudent1.getDetails(rollNo,name,cgpa);
+       if(listOfDetails.insertAtLast(tempStudent1)==1)
+          cout<<"\n Successfully inserted at last\n";
+       else
+         cout<<"\n Insertion at last operation is failed because U exeeds the maximum\n";
+    }
+    else if(option==5)
+    {
+      cout<<"\nEnter student's details to perform insertByPosition operation( RollNo,Name,CGPA ):\n ";
+      cin >> rollNo;
+      cin >> name;
+      cin >> cgpa;
+      cout << "Enter At which position you like to insert\n";
+      cin >> count;
+      Student tempStudent2;
+      tempStudent2.getDetails(rollNo,name,cgpa);
+      int state=listOfDetails.insertByPos(tempStudent2,count);
+      if(state==1)
+         cout<<"\n Successfully inserted \n";
+      else if(state==-2)
+         cout<<"\n Given position is invalid\n";
+      else
+         cout<<"\n Insertion failed because U exeeds the maximum\n";
+   }
+   else if(option==6)
+   {
+      if( listOfDetails.deleteAtFirst() == 1)
+         cout<<"\n Successfully deleted at first\n";
+      else
+          cout<<"\n Deletion at first failed because list is empty\n";
+   }
+   else if(option==7)
+   {
+     if( listOfDetails.deleteAtLast() == 1)
+        cout<<"\n Successfully deleted at last\n";
+     else
+        cout<<"\n Deletion at last failed because list is empty\n";
+   }
+   else if(option==8)
+   {
+   if( listOfDetails.displayList() == 1)
+     cout<<"\n Successfully displayed\n";
+   else
+     cout<<"\n Operation failed because list is empty\n";
+   }
+   else if(option==9)
+   {
+      if( listOfDetails.makeListEmpty() == 1)
+        cout<<"\n List is empty now\n";
+      else
+        cout<<"\n Operation failed\n";
+   }
+   else if(option==10)
+   {
+     if( listOfDetails.searchAtFirst() == 1)
+        cout<<"\n Operation successful\n";
+     else
+        cout<<"\n Operation failed because list is empty\n";
+   }
+   else if(option==11)
+   {
+      cout<<"\nEnter student's rollno to perform searchAnElement operation: ";
+      cin >> rollNo;
+      int index=listOfDetails.searchAnElt(rollNo);
+      if(index == -2)
+        cout<<"\n Element is not in the list \n";
+      else if (index==-1 )
+        cout<<"List is empty\n";
+      else
+      {
+         cout<<"\n Element is present in position "<<index+1<<"\n";
+      }
+  }
+  else if(option==12)
+       cout<<"\n Thank you! \n\n";
+  else
+       cout<<"\n Enter a valid input\n";
+  }
+ }while(option != 12);
+}
+[19bcs150@mepcolinux ex1]$cat makefile
+AL.exe: ALimp.o ALapp.o
+        g++ -o AL.exe ALimp.o ALapp.o
+ALimp.o: ALimp.cpp
+        g++ -c ALimp.cpp
+ALapp.o: ALapp.cpp
+        g++ -c ALapp.cpp
+[19bcs150@mepcolinux ex1]$make
+make: `AL.exe' is up to date.
+
+[19bcs150@mepcolinux ex1]$./AL.exe
+         ~~~~~ Student Details Management System ~~~~~
+
+Enter maximum student Details you like to store(NOTE: you can't store more than this maximum)
+8
+
+Enter how many student details have to upload(NOTE: It must be less than the above entered value or equal to that value):
+ 3
+
+Enter 1student's details( Name,RollNo,CGPA ):
+Raj 123 10
+
+Enter 2student's details( Name,RollNo,CGPA ):
+Ravi 124 9.8
+
+Enter 3student's details( Name,RollNo,CGPA ):
+Mani 125 8.7
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 1
+
+ ~~ isFull ~~
+ List is not full
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 2
+
+ ~~ isEmpty ~~
+ List is not Empty
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 3
+
+Enter student's details to perform insertAtFirst operation( RollNo,Name,CGPA ):
+ 127 kavi 8.2
+
+ Successfully inserted at first
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 4
+
+Enter student's details to perform insertAtLast operation( RollNo,Name,CGPA ):
+ 234 Hari 9.2
+
+ Successfully inserted at last
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 8
+
+Student details:
+Rollno   CGPA            Name
+127     8.2             kavi
+123     10              Raj
+124     9.8             Ravi
+125     8.7             Mani
+234     9.2             Hari
+
+
+ Successfully displayed
+
+select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 5
+
+Enter student's details to perform insertByPosition operation( RollNo,Name,CGPA ):
+ 120 Ram 8.2
+Enter At which position you like to insert
+2
+
+ Successfully inserted
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 6
+
+ Successfully deleted at first
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 7
+
+ Successfully deleted at last
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 9
+
+ List is empty now
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 3
+
+Enter student's details to perform insertAtFirst operation( RollNo,Name,CGPA ):
+ 23 ref 8
+
+ Successfully inserted at first
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 1
+
+ ~~ isFull ~~
+ List is not full
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 3
+
+Enter student's details to perform insertAtFirst operation( RollNo,Name,CGPA ):
+ 124 Mani 8.6
+
+ Successfully inserted at first
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 3
+
+Enter student's details to perform insertAtFirst operation( RollNo,Name,CGPA ):
+ 127 Tamil 9.2
+
+ Successfully inserted at first
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 10
+
+ RollNo = 127
+ Name = Tamil
+ CGPA = 9.2
+
+ Operation successful
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 11
+
+Enter student's rollno to perform searchAnElement operation: 127
+
+ RollNo = 127
+ Name = Tamil
+ CGPA = 9.2
+
+ Element is present in position 1
+
+
+Select which operation you like to perform...
+ 1.isFull
+ 2.isEmpty
+ 3.insertAtFirst
+ 4.insertAtLast
+ 5.insertByPosition
+ 6.deleteAtFirst
+ 7.deleteAtLast
+ 8.displayList
+ 9.MakeListEmpty
+ 10.searchAtFirst
+ 11.searchAnElement
+ 12.Exit
+ Enter your choice: 12
+
+ Thank you!
+
+[19bcs150@mepcolinux ex1]$exit
+exit
+
+Script done on Thu 18 Feb 2021 11:31:41 PM IST
