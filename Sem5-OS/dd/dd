@@ -1,0 +1,29 @@
+[19bcs165@mepcolinux deadlock_detection]$./a.out 
+Enter number of vertices : 6
+Enter number of edges  : 7
+
+Enter edge 1's source and destination  : 0 3
+Enter edge 2's source and destination  : 0 1
+Enter edge 3's source and destination  : 1 2             
+Enter edge 4's source and destination  : 1 4
+Enter edge 5's source and destination  : 1 5
+Enter edge 6's source and destination  : 3 1
+Enter edge 7's source and destination  : 4 2
+
+No DEADLOCK detected
+[19bcs165@mepcolinux deadlock_detection]$./a.out 
+Enter number of vertices : 6
+Enter number of edges  : 7
+
+Enter edge 1's source and destination  : 0 3
+Enter edge 2's source and destination  : 0 1
+Enter edge 3's source and destination  : 1 4
+Enter edge 4's source and destination  : 3 1
+Enter edge 5's source and destination  : 4 2
+Enter edge 6's source and destination  : 2 5
+Enter edge 7's source and destination  : 5 1
+
+DEADLOCK is due to the edge 5--->1
+
+DEADLOCK detected
+

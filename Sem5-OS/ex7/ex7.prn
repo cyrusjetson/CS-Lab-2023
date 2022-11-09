@@ -1,0 +1,135 @@
+Script started on Thu 21 Oct 2021 09:28:59 PM IST
+[19bcs150@mepcolinux ex7]$cd ex7a
+[19bcs150@mepcolinux ex7a]$cat count.c
+#include<stdio.h>
+#include<unistd.h>
+#include<string.h>
+int main()
+{
+        int pipeEle[2];
+        int returnStatus;
+        int pid,i,n;
+        int words[20];
+        int readWord[20];
+        int length,sum=0,cnt=0;
+        printf("\nEnter the no. of elements :");
+        scanf("%d",&n);
+        returnStatus=pipe(pipeEle);
+        if(returnStatus==-1)
+        {
+                printf("Pipe not created...");
+                return 0;
+        }
+        else
+        {
+                pid=fork();
+                if(pid==0){
+                        printf("\nReading characters from CHILD Process");
+                        read(pipeEle[0],readWord,sizeof(readWord));
+                        for(i=0;i<n;i++)
+                        {
+                                if(readWord[i]%2 == 0) {
+                                        sum = sum +readWord[i];
+                                        cnt++;
+                                }
+                      }
+                        printf("\n");
+                        printf("\nSum of Even numbers =  %d\n",sum);
+                        printf("\nCount of Even numbers = %d\n",cnt);
+                }
+                else
+                {
+                    printf("\nEnter the numbers : ");
+                    for(i=0;i<n;i++)
+                        scanf("%d",&words[i]);
+                    printf("\nWriting into Pipe from PARENT process\n");
+                    write(pipeEle[1],words,sizeof(words));
+                }
+        }
+}
+
+[19bcs150@mepcolinux ex7a]$./a.out
+
+Enter the no. of elements :6
+
+Enter the numbers :
+2 12 6 3 1 5
+
+Writing into Pipe from PARENT process
+Reading characters from CHILD Process
+
+Sum of Even numbers =  20
+
+Count of Even numbers = 3
+[19bcs150@mepcolinux ex7a]$cd ..
+[19bcs150@mepcolinux ex7]$cd ex7b
+[19bcs150@mepcolinux ex7b]$cat vowels.c
+#include<stdio.h>
+#include<unistd.h>
+#include<string.h>
+#include<ctype.h>
+
+int main()
+{
+        int pipeEle[2];
+        int returnStatus;
+        int pid,i;
+        char words[100];
+        char readWord[100];
+        int length,c=0;
+        returnStatus=pipe(pipeEle);
+        if(returnStatus==-1)
+        {
+                printf("Pipe not created\n");
+                return 0;
+        }
+        else
+        {
+                pid=fork();
+                if(pid==0)
+                {
+                        read(pipeEle[0],readWord,sizeof(readWord));
+                        length=strlen(readWord);
+                        printf("\nReading from pipe...\n");
+                        printf("\nNumber of characters : %d",length);
+
+                        while (readWord[i] != '\0') {
+                                readWord[i] = tolower(readWord[i]);
+                                i++;
+                        }
+
+
+                        for(i=0;i<length;i++)
+                        {
+                                if(readWord[i]=='a'|| readWord[i]=='e' || readWord[i] =='i' || readWord[i] == 'o' || readWord[i] =='u')
+                                        c++;
+                        }
+                        printf("\nNo.of vowels =  %d\n",c);
+                }
+                else
+               {
+                        printf("\nEnter characters: ");
+                        gets(words);
+                        printf("\n\nWriting into Pipe...\n");
+                        write(pipeEle[1],words,sizeof(words));
+                }
+        }
+}
+
+
+[19bcs150@mepcolinux ex7b]$./a.out
+
+Enter characters: hello
+
+
+Writing into Pipe...
+
+Reading from pipe...
+
+Number of characters : 5
+No.of vowels =  2
+
+[19bcs150@mepcolinux ex7]$exit
+exit
+
+Script done on Thu 21 Oct 2021 09:29:02 PM IST

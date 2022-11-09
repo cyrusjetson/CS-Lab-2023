@@ -1,0 +1,135 @@
+[19bcs163@mepcolinux Ex3]$cat Ex3.prn
+Script started on Thursday 21 October 2021 04:04:36 PM IST
+[19bcs163@mepcolinux queue]$cat q.c
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
+char*revc(char[10]);
+
+struct mesg_buffer
+{
+    long mesg_type;
+    char mesg_text[100];
+}message;
+
+int main()
+{
+    int msgid,i,m,j,fid;
+    char temp;
+    char arr[100],buffer[100];
+    fid = fork();
+    if(fid==0)
+    {
+         msgid = msgget(3163,0666|IPC_CREAT);
+         message.mesg_type = 1;
+         msgrcv(msgid, &message, sizeof(message), 1, 0);
+         j = strlen(message.mesg_text);
+         strcpy(buffer,message.mesg_text);
+         int k=0;
+         int len=strlen(buffer);
+         for(i=len-1;i>=0;i--)
+             arr[k++]=buffer[i];
+         arr[k]='\0';
+         printf("Recived Message : %s\n",arr);
+    }
+    else
+    {
+       msgid = msgget(3163,0666|IPC_CREAT);
+       printf("Enter   Message : ");
+       scanf("%s",&message.mesg_text);
+       message.mesg_type = 1;
+       msgsnd(msgid, &message, sizeof(message), 0);
+    }
+    msgctl(msgid, IPC_RMID, NULL);
+    return 0;
+}
+[19bcs163@mepcolinux queue]$./a.out
+Enter   Message : hello
+Recived Message : olleh
+[19bcs163@mepcolinux queue]$./a.out
+Enter   Message : world
+Recived Message : dlrow
+[19bcs163@mepcolinux queue]$cd ../share/
+[19bcs163@mepcolinux share]$cat read.c
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/shm.h>
+#include<string.h>
+int main()
+{
+   int i;
+   void *shared_memory;
+   char buffer[100],arr[100];
+   int shmid;
+   shmid=shmget((key_t)3163, 1024, 0666);
+   printf("Key of shared memory is %d\n",shmid);
+   shared_memory=shmat(shmid,NULL,0);
+   printf("Process attached at %p\n",shared_memory);
+   strcpy(buffer,(char *)shared_memory);
+   int k=0;
+   int len=strlen(buffer);
+   for(i=len-1;i>=0;i--)
+     arr[k++]=buffer[i];
+   arr[k]='\0';
+   printf("\nData read from shared memory is : %s\n",arr);
+}
+[19bcs163@mepcolinux share]$cat read.c
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/shm.h>
+#include<string.h>
+int main()
+{
+   int i;
+   void *shared_memory;
+   char buffer[100],arr[100];
+   int shmid;
+   shmid=shmget((key_t)3163, 1024, 0666);
+   printf("Key of shared memory is %d\n",shmid);
+   shared_memory=shmat(shmid,NULL,0);
+   printf("Process attached at %p\n",shared_memory);
+   strcpy(buffer,(char *)shared_memory);
+   int k=0;
+   int len=strlen(buffer);
+   for(i=len-1;i>=0;i--)
+     arr[k++]=buffer[i];
+   arr[k]='\0';
+   printf("\nData read from shared memory is : %s\n",arr);
+}
+[19bcs163@mepcolinux share]$./w.o
+Key of shared memory is 163856
+Process attached at 0x7f20bd232000
+
+Enter your shared Message :
+hello
+
+Your message is written : hello
+
+[19bcs163@mepcolinux share]$./r.o
+Key of shared memory is 163856
+Process attached at 0x7f023d273000
+
+Data read from shared memory is :
+olleh
+[19bcs163@mepcolinux share]$./w.o
+Key of shared memory is 163856
+Process attached at 0x7f4caadb2000
+
+Enter your shared Message :
+world
+
+Your message is written : world
+
+[19bcs163@mepcolinux share]$./r.o
+Key of shared memory is 163856
+Process attached at 0x7f453f314000
+
+Data read from shared memory is :
+dlrow
+[19bcs163@mepcolinux share]$exit
+exit
+
+Script done on Thursday 21 October 2021 04:06:21 PM IST

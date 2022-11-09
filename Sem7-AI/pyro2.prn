@@ -1,0 +1,47 @@
+
+Script started on Thu 03 Nov 2022 01:58:58 PM IST
+
+[19bcs150@mepcolinux pyro]$cat pyro.py
+import pyro
+import torch
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+
+import pyro.distributions as dist
+
+def weather():
+  cloudy = pyro.sample("cloudy", pyro.distributions.Bernoulli(random.random()))
+  temp_mean = {"cloudy":30,"not_cloudy":40}
+  temp_std = {"cloudy":15.4,"not_cloudy":15.5}
+  actual = "cloudy" if cloudy == 1.0 else "not_cloudy"
+  return actual, pyro.sample("normal distribution", pyro.distributions.Normal(temp_mean[actual],temp_std[actual]))
+for _ in range(4):
+    print(weather())
+
+mean = 12.46
+std = 25.01
+rate = 1
+dist_normal=[]
+dist_poisson=[]
+for _ in range(200):
+  dist_normal.append(pyro.sample("sample_name",pyro.distributions.Normal(mean,std)))
+  dist_poisson.append(pyro.sample("sample_name",pyro.distributions.Poisson(rate)))
+
+sns.distplot(dist_normal)
+
+sns.distplot(dist_poisson)
+
+[19bcs150@mepcolinux pyro]$python3 pyro.py
+
+('cloudy', tensor(20.5029))
+('cloudy', tensor(47.9576))
+('not_cloudy', tensor(30.1781))
+('cloudy', tensor(20.0345))
+
+
+[19bcs150@mepcolinux pyro]$exit
+exit
+
+Script done on Thu 03 Nov 2022 01:59:01 PM IST

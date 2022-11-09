@@ -1,0 +1,44 @@
+Script started on Tue 01 Nov 2022 02:45:19 PM IST
+
+[19bcs150@mepcolinux AI]$cat pyro.txt
+
+Pyro Ex:
+
+!pip install pyro-ppl
+import pyro
+import torch
+import random
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+mean = 9.89
+std = 19.5
+rate = 1
+distributions_normal = [ ]
+distributions_poisson = [ ]
+for _ in range ( -100 , 100 ):
+  distributions_normal.append ( pyro.sample ( "sample_name" , pyro.distributions.Normal ( mean , std ) ) )
+  distributions_poisson.append ( pyro.sample ( "sample_name" , pyro.distributions.Poisson ( rate ) ) )
+sns.distplot ( distributions_normal )
+sns.distplot ( distributions_poisson )
+
+def weather ( ):
+  cloudy = pyro.sample ( "cloudy" , pyro.distributions.Bernoulli ( random.random ( ) ) )
+  temperature_mean = { "cloudy" : 20 , "not_cloudy": 50 }
+  temperature_std = { "cloudy" : 10.4 , "not_cloudy": 25.5 }
+  actual = "cloudy" if cloudy == 1.0 else "not_cloudy"
+  return actual , pyro.sample ( "normal distribution" , pyro.distributions.Normal ( temperature_mean [ actual ] , temperature_std [ actual ] ) )
+for _ in range ( 4 ):
+  print ( weather ( ) )
+
+[19bcs150@mepcolinux AI]$python3 pyro.py
+Output:
+('not_cloudy', tensor(33.9572))
+('not_cloudy', tensor(47.6527))
+('cloudy', tensor(10.2179))
+('not_cloudy', tensor(48.2752))
+
+[19bcs150@mepcolinux AI]$exit
+exit
+
+Script done on Tue 01 Nov 2022 02:45:22 PM IST

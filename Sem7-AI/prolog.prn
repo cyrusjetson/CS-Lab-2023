@@ -1,0 +1,96 @@
+Script started on Fri 28 Oct 2022 02:34:56 PM IST
+
+[19bcs150@mepcolinux CI]$cat calculator.pl
+
+sum(X,Y):-
+   Z is X+Y,
+   write(Z).
+sub(X,Y):-
+   Z is X-Y,
+   write(Z).
+mul(X,Y):-
+   Z is X*Y,
+   write(Z).
+div(X,Y):-
+   Z is X/Y,
+   write(Z).
+
+?-
+% e:/calculator.pl compiled 0.00 sec, 4 clauses
+?- sum(5,5).
+10
+true.
+
+?- sub(5,-10).
+15
+true.
+
+?- div(5,5).
+1
+true.
+
+?- mul(5,5).
+25
+true.
+
+[19bcs150@mepcolinux CI]$cat family2.pl
+
+male(ben).
+male(ken).
+male(kevin).
+female(kaigreen).
+female(gwen).
+sib1(ben,kevin).
+sib1(kaigreen,gwen).
+parent(kaigreen,ken).
+parent(ben,ken).
+spouse(ben,kaigreen).
+spouse(kaigreen,ben).
+mother(X,Y):-parent(X,Y),female(X).
+father(X,Y):-parent(X,Y),male(X).
+husband(X,Y):-spouse(X,Y),female(X).
+wife(X,Y):-spouse(X,Y),female(X).
+human(X):-male(X);female(X).
+sib2(X, Y) :- sib1(X, Y) ; sib1(Y, X).
+sibling(X, Y) :- sib2(X, Y).
+
+?-
+% e:/family2.pl compiled 0.00 sec, 18 clauses
+?- human(ben).
+true .
+
+?- wife(kaigreen,ben).
+true.
+
+?- mother(kaigreen,ken).
+true.
+
+?- sibling(ben,X).
+X = kevin .
+
+
+[19bcs150@mepcolinux CI]$cat west.pl
+
+missile(m).
+owns(nono,m).
+enemy(nono,american).
+american(west).
+weapon(X):- missile(X).
+sells(west,X,nono):- missile(X),owns(nono,X).
+hostile(X):-enemy(X,american).
+criminal(X):-american(X),weapon(Y),sells(X,Y,Z),hostile(Z).
+
+
+?-
+% e:/west.pl compiled 0.00 sec, 8 clauses
+?- american(west).
+true.
+
+?- criminal(X).
+X = west.
+
+
+[19bcs150@mepcolinux AI]$exit
+exit
+
+Script done on Fri 28 Oct 2022 02:34:58 PM IST
