@@ -1,0 +1,152 @@
+Script started on Wednesday 18 September 2019 04:19:30 PM IST
+[19bcs150@mepcolinux exe3]$cd exe3a
+[19bcs150@mepcolinux exe3a]$cat sum.h
+/*J.Jetson Cyrus
+ * 19BCS150
+ * exe3a
+ * Sum of n numbers while loop
+ * 4.9.2019*/
+#include<stdio.h>
+int sum(int n);
+[19bcs150@mepcolinux exe3a]$cat sumimp.c
+#include"sum.h"
+int sum(int n)
+{
+  int s,i;
+  i = 1;
+  s = 0;
+  while(i<=n)
+  {
+     s=s+i;
+     i=i+1;
+  }
+  return s;
+}
+[19bcs150@mepcolinux exe3a]$cat sumapp.c
+#include"sum.h"
+int main()
+{
+  int n,s;
+  printf("Enter the number of terms\n");
+  scanf("%d",&n);
+  s = sum(n);
+  printf("Sum of the given term is %d\n",s);
+}
+[19bcs150@mepcolinux exe3a]$cat makefile
+sum.exe:sumimp.o sumapp.o
+	cc sumimp.o sumapp.o -o sum.exe
+sumimp.o:sumimp.c
+	cc -c sumimp.c
+sumapp.o:sumapp.c
+	cc -c sumapp.c
+[19bcs150@mepcolinux exe3a]$./sum.exe
+Enter the number of terms
+3
+Sum of the given term is 6
+[19bcs150@mepcolinux exe3a]$cd ..
+[19bcs150@mepcolinux exe3]$cd exe3b
+[19bcs150@mepcolinux exe3b]$cat large.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe3b
+ *Sum of n numbers largest of n numbers
+ *4.9.2019*/
+#include<stdio.h>
+int big();
+[19bcs150@mepcolinux exe3b]$cat largeimp.c
+#include"large.h"
+int big(int n)
+{
+  int a,i,big;
+  i = 1;
+  big = -99999;
+  do
+  {
+    scanf("%d",&a);
+    if(big<a)
+      {
+        big=a;
+      }
+    i=i+1;
+  }
+  while(i<=n);
+  return big;
+}
+[19bcs150@mepcolinux exe3b]$cat largeapp.c
+#include"large.h"
+int main()
+{
+  int n,b;
+  printf("Enter the number of terms\n");
+  scanf("%d",&n);
+  printf("Enter the elements in the list\n");
+  b = big(n);
+  printf("The biggest of the given numbers is %d\n",b);
+}
+[19bcs150@mepcolinux exe3b]$cat makefile
+large.exe:largeimp.o largeapp.o
+	cc largeimp.o largeapp.o -o large.exe
+largeimp.o:largeimp.c
+	cc -c largeimp.c
+largeapp.o:largeapp.c
+	cc -c largeapp.c
+[19bcs150@mepcolinux exe3b]$./large.exe
+Enter the number of terms
+4
+Enter the elements in the list
+-3
+4
+3
+5
+The biggest of the given numbers is 4
+[19bcs150@mepcolinux exe3b]$cd ..
+[19bcs150@mepcolinux exe3]$cd exe3c
+[19bcs150@mepcolinux exe3c]$cat series.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe3c
+ *Fibanacci series
+ *4.9.2019*/
+#include<stdio.h>
+void series();
+[19bcs150@mepcolinux exe3c]$cat seriesimp.c
+#include"series.h"
+void series()
+{
+int n,a,b,c,i;
+printf("Enter the number of terms\n");
+scanf("%d",&n);
+printf("The elements of fibanacci series is\n");
+a=-1;b=1;
+for(i=1;i<=n;i++)
+{
+c=a+b;
+printf("%d\n",c);
+a=b;
+b=c;
+}
+}
+[19bcs150@mepcolinux exe3c]$cat seriesapp.c
+#include"series.h"
+int main()
+{
+  series();
+}
+[19bcs150@mepcolinux exe3c]$cat makefile
+series.exe:seriesimp.o seriesapp.o
+	cc seriesimp.o seriesapp.o -o series.exe
+seriesimp.o:seriesimp.c
+	cc -c seriesimp.c
+seriesapp.o:seriesapp.c
+	cc -c seriesapp.c
+[19bcs150@mepcolinux exe3c]$./series.exe
+Enter the number of terms
+5
+The elements of fibanacci series is
+0
+1
+1
+2
+3
+[19bcs150@mepcolinux exe3c]$exit
+Script done on Wednesday 18 September 2019 04:29:54 PM IST

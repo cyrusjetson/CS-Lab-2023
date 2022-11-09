@@ -1,0 +1,111 @@
+Script started on Sunday 22 September 2019 03:25:33 PM IST
+[19bcs150@mepcolinux exe4]$cd exe4a
+[19bcs150@mepcolinux exe4a]$cat armstrong.h
+/*J.Jetson Cyrus
+ * 19BCS150
+ * exe4a
+ * Armstrong number
+ * 18.9.2019*/
+#include<stdio.h>
+#include<math.h>
+int armstrong(int);
+[19bcs150@mepcolinux exe4a]$cat armstrongimp.c
+#include"armstrong.h"
+int armstrong(int n)
+{
+ int a,b,q,r,c,s;
+ a=n; 
+ s=0;
+ c=0;
+ while(a>0)
+{
+ a=a/10;
+ c++;
+}
+ while(n!=0)
+{
+ q=n/10;
+ r=n%10; 
+ b=pow(r,c);
+ s=s+b;
+ n=q;
+}
+ return s;
+}
+[19bcs150@mepcolinux exe4a]$cat armstrongapp.c
+#include"armstrong.h"
+void main()
+{
+ int n,num;
+ printf("Enter the number\n");
+ scanf("%d",&n);
+ num=armstrong(n);
+ if (num==n)
+{
+ printf("The number is armstrong\n");
+}
+ else
+{
+ printf("The number is not a armstrong\n");
+}
+}
+[19bcs150@mepcolinux exe4a]$cat makefile
+armstrong.exe:armstrongimp.o armstrongapp.o
+	cc -o armstrong.exe armstrongimp.o armstrongapp.o -lm
+armstrongimp.o:armstrongimp.c
+	cc -c armstrongimp.c
+armstrongapp.o:armstrongapp.c
+	cc -c armstrongapp.c
+[19bcs150@mepcolinux exe4a]$./armstrong.exe
+Enter the number
+153
+The number is armstrong
+[19bcs150@mepcolinux exe4a]$./armstrong.exe
+Enter the number
+465
+The number is not a armstrong
+[19bcs150@mepcolinux exe4a]$cd ..
+[19bcs150@mepcolinux exe4]$cd exe4b
+[19bcs150@mepcolinux exe4b]$cat factorial.h
+/*J.Jetson Cyrus
+ * 19BCS150
+ * exe4b
+ * factorial
+ * 18.09.2019*/
+#include<stdio.h>
+long find_factorial(int);
+[19bcs150@mepcolinux exe4b]$cat factorialimp.c
+#include"factorial.h"
+long find_factorial(int n)
+{
+if (n==0)
+return 1;
+return n*find_factorial(n-1);
+}
+[19bcs150@mepcolinux exe4b]$cat factorialapp.c
+#include"factorial.h"
+int main()
+{int n;
+long r;
+printf("Enter the number\n");
+scanf("%d",&n);
+r= find_factorial(n);
+printf("The factorial of the given number is : %ld\n",r);
+}
+[19bcs150@mepcolinux exe4b]$cat makefile
+factorial.exe:factorialimp.o factorialapp.o
+	cc -o factorial.exe factorialimp.o factorialapp.o
+factorialimp.o:factorialimp.c
+	cc -c factorialimp.c
+factorialapp.o:factorialapp.c
+	cc -c factorialapp.c
+[19bcs150@mepcolinux exe4b]$./factorial.exe
+Enter the number
+5
+The factorial of the given number is : 120
+[19bcs150@mepcolinux exe4b]$./factorial.exe
+Enter the number
+3
+The factorial of the given number is : 6
+[19bcs150@mepcolinux exe4b]$exit
+Script done on Sunday 22 September 2019 03:29:07 PM IST
