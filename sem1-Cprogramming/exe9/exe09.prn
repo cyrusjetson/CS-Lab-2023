@@ -1,0 +1,216 @@
+Script started on Thu 28 Nov 2019 01:37:25 PM IST
+[19bcs150@mepcolinux exe9]$cd exe9a
+[19bcs150@mepcolinux exe9a]$ls
+compapp.o  comp.exe  compimp.o	guestapp.c  guestapp.o	guest.exe  guest.h  guestimp.c	guestimp.o  makefile
+[19bcs150@mepcolinux exe9a]$cat guest.h
+/* Roll no. : 19bcs150
+ * Name     : J.Jetson Cyrus
+ * Date     : 06/11/2019
+ * ex name  : finding factorial and fibanocci using single function
+ * ex no.   : ex9a */
+#include<stdio.h>
+void compute(int);
+[19bcs150@mepcolinux exe9a]$cat guestimp.c
+#include"guest.h"
+int fact(int n)
+{
+  int i,sum=1;
+  for(i=1;i<=n;i++)
+  {
+   sum=sum*i;
+  }  
+  return sum;}
+int fibo(int n)
+{ 
+  int a,b,c=0;
+  int i=0;
+    a=-1;
+    b=1;
+ while(i<n)
+  {
+    c=a+b;
+    a=b;
+    b=c;
+    i=i+1;
+   }
+return b;}
+ void compute(int n)
+{  int ch,r,r1;
+   char f;
+  do{ 
+   printf("\n enter 1.for factorial,2.for fiboseries\n");
+   scanf("%d",&ch);
+ switch(ch)
+  {
+    case 1:  r1=fact(n);
+             printf("\n factorial: %d\n",r1);
+              break;
+    case 2:  r=fibo(n); 
+              printf("\n nth fiboseries: %d\n",r);
+              break;
+   }}while(ch>=1&&ch<=1);
+   
+}
+[19bcs150@mepcolinux exe9a]$cat guestapp.c
+#include"guest.h"
+int main()
+{
+ int n;
+ printf("\nenter the number to get both nth fibo and factorial\n");
+ scanf("%d",&n);
+ compute(n);
+ } 
+[19bcs150@mepcolinux exe9a]$cat makefile
+guest.exe: guestimp.o guestapp.o
+	cc -o guest.exe guestimp.o guestapp.o
+guestimp.o: guestimp.c
+	cc -c guestimp.c
+guestapp.o: guestapp.c
+	cc -c guestapp.c
+[19bcs150@mepcolinux exe9a]$./guest.exe
+
+enter the number to get both nth fibo and factorial
+5
+
+ enter 1.for factorial,2.for fiboseries
+1
+
+ factorial: 120
+
+ enter 1.for factorial,2.for fiboseries
+2
+
+ nth fiboseries: 3
+[19bcs150@mepcolinux exe9a]$cd ..
+[19bcs150@mepcolinux exe9]$cd exe9b
+[19bcs150@mepcolinux exe9b]$ls
+accapp.c  accapp.o  acc.exe  acc.h  accimp.c  accimp.o	makefile
+[19bcs150@mepcolinux exe9b]$cat acc.h
+/* Roll no. : 19bcs150
+ * Name     : Jetson Cyrus
+ * Date     : 06/11/2019
+ * ex name  : getting bank customer details
+ * ex no.   : ex9b */
+#include<stdio.h>
+#include<string.h>
+#include<malloc.h>
+typedef struct customer
+{
+char cname[25];
+long accno;
+long balance;
+char add[30];
+}cust;
+cust* searchAcno(cust[],int,int);
+void searchname(cust[],int,char[]);
+void display(cust*);
+[19bcs150@mepcolinux exe9b]$cat accimp.c
+#include"acc.h"
+cust* searchAcno(cust c[10],int n,int acno)
+{
+int i,o=0;
+for(i=0;i<n;i++)
+{
+ if(c[i].accno==acno)
+ {  
+  return &c[i];
+  o++;
+ }
+}
+if(o==0)
+ printf("there is no record for this acc no.\n");
+}
+void searchnames(cust c[10],int n,char na[20])
+{
+int i,m=0;
+for(i=0;i<n;i++)
+{
+ if(strcmp(c[i].cname,na)==0)
+   {
+    displayrecord(c);
+    m++;
+   }
+}
+if(m==0)
+ printf("there is no record \n");
+}
+void displayrecord(cust *c)
+{
+printf("Customer Name:%s\n",c->cname);
+printf("Accno:%d\n",c->accno);
+printf("Balance:%d\n",c->balance);
+printf("Address:%s\n",c->add);
+}
+[19bcs150@mepcolinux exe9b]$cat accapp.c
+#include"acc.h"
+void main()
+{
+cust *p;
+cust c[10];
+int i,n,acno;
+char s[20];
+printf("Enter the no of customers:");
+scanf("%d",&n);
+p=&c[n];
+printf("Enter cust details:\n");
+for(i=0;i<n;i++)
+{
+printf("\n Enter name:");
+scanf("%s",c[i].cname);
+printf("\n Enter the accno ");
+scanf("%d",&c[i].accno);
+printf("\nEnter the balance ");
+scanf("%d",&c[i].balance);
+printf("\n Enter the address");
+scanf("%s",c[i].add);
+}
+printf("\n Enter the name to be searched:");
+scanf("%s",s);
+searchnames(c,n,s);
+printf("\n Enter the accno to be searched:");
+scanf("%d",&acno);
+p=searchAcno(c,n,acno);
+displayrecord(p);
+}
+[19bcs150@mepcolinux exe9b]$cat makefile
+acc.exe:accimp.o accapp.o
+	cc -o acc.exe accimp.o accapp.o
+accimp.o:accimp.c
+	cc -c accimp.c
+accapp.o:accapp.c
+	cc -c accapp.c  
+[19bcs150@mepcolinux exe9b]$./acc.exe
+Enter the no of customers:2
+Enter cust details:
+
+ Enter name:jetson
+
+ Enter the accno234
+
+Enter the balance 500000
+
+ Enter the addresskayathar
+
+ Enter name:cyrus
+
+ Enter the accno567
+
+Enter the balance 450000
+
+ Enter the addressdelhi
+
+ Enter the name to be searched:jetson
+Customer Name:jetson
+Accno:234
+Balance:500000
+Address:kayathar
+
+ Enter the accno to be searched:567
+Customer Name:cyrus
+Accno:567
+Balance:45000
+Address:delhi
+[19bcs150@mepcolinux exe9b]$exit
+exit
+
+Script done on Thu 28 Nov 2019 01:41:23 PM IST

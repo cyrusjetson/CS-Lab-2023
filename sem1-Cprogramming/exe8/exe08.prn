@@ -1,0 +1,236 @@
+Script started on Wednesday 27 November 2019 03:03:21 PM IST
+[?1034h[19bcs150@mepcolinux exe8]$cd exe8
+[19bcs150@mepcolinux exe8]$ls
+makefile  strucapp.c  strucapp.o  struc.exe  struc.h  strucimp.c  strucimp.o
+[19bcs150@mepcolinux exe8]$cat struc.h
+/* Roll no. : 19bcs150
+ * Name     : J.Jetson Cyrus
+ * Date     : 30/10/2019
+ * ex name  : employee payroll processing system
+ * ex no.   : ex8 */
+
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<ctype.h>
+typedef struct emp
+{
+char name[20];
+int empId;
+char design[20];
+char branch[20];
+int baspay;
+float netsal;
+}em;
+void high_sal(em emp[10],int);
+void sal_range(em emp[10],int);
+void designation(em emp[10],int);
+void branch(em emp[10],int,char[]);
+void display(em emp);  
+[19bcs150@mepcolinux exe8]$cat struc.h[K[Kimp.c
+#include"struc.h"
+void high_sal(em emp[10],int n)
+{
+int i;
+float max=0;
+for(i=0;i<n;i++)
+{
+if(emp[i].netsal>max)
+max=emp[i].netsal;
+}
+for(i=0;i<n;i++)
+if(max==emp[i].netsal)
+display(emp[i]);
+}
+void display(em emp)
+{
+printf("\n Name :");
+printf("%s",emp.name);
+printf("\n Empid :");
+printf("%d",emp.empId);
+printf("\n Desig :");
+printf("%s",emp.design);
+printf("\n  Branch :");
+printf("%s",emp.branch);
+printf("\n Bpay :");
+printf("%d",emp.baspay);
+printf("\n Netsal is :");
+printf("%f",emp.netsal);
+}
+void sal_range(em emp[10],int n)
+{
+int i;
+for(i=0;i<n;i++)
+{
+if(emp[i].netsal>300000&&emp[i].netsal<600000)
+display(emp[i]);
+}
+}
+void designation(em emp[10],int n)
+{
+int i;
+for(i=0;i<n;i++)
+{
+if(strcmp(emp[i].design,"manager")==0)
+display(emp[i]);
+}
+}
+void branch(em emp[10],int n,char b[20])
+{
+int i;
+for(i=0;i<n;i++)
+{
+if(strcmp(emp[i].branch,b)==0)
+display(emp[i]);
+}
+}
+[19bcs150@mepcolinux exe8]$cat strucimp.c[K[K[K[K[Kapp.c
+#include"struc.h"
+int main()
+{
+int i,n,ch;
+char b[20];
+em emp[10];
+printf("enter how many employee\n");
+scanf("%d",&n);
+printf("enter the record of employee\n");
+for(i=0;i<n;i++)
+{
+printf("\n name :");
+scanf("%s",emp[i].name);
+printf("\n eployee Id :");
+scanf("%d",&emp[i].empId);
+printf("\n desigination:");
+scanf("%s",emp[i].design);
+printf("\n enter branch :");
+scanf("%s",emp[i].branch);
+printf("\n enter basic pay :");
+scanf("%d",&emp[i].baspay);
+emp[i].netsal=((emp[i].baspay+1000)-0.12*emp[i].baspay);
+}
+do
+{
+printf("\nenter\n");
+printf("1 for highest salary holder\n");
+printf("2 for salary  b/w 3lakh to 6lakhs\n");
+printf("3 for display all managers\n");
+printf("4 for emplyee in branch\n");
+scanf("%d",&ch);
+switch(ch)
+{
+case 1:
+high_sal(emp,n);
+break;
+case 2:
+sal_range(emp,n);
+break;
+case 3:
+designation(emp,n);
+break;
+case 4:
+printf("enter the place\n");
+scanf("%s",b);
+branch(emp,n,b);
+break;
+default:
+printf("invalid input\n");
+}}while(ch>=1&&ch<=4);
+}
+
+[19bcs150@mepcolinux exe8]$cat makefils[Ke
+struc.exe: strucimp.o strucapp.o
+	cc -o struc.exe strucimp.o strucapp.o
+strucimp.o: strucimp.c
+	cc -c strucimp.c
+strucapp.o: strucapp.c
+	cc -c strucapp.c
+[19bcs150@mepcolinux exe8]$./struc.exe
+enter how many employee
+2
+enter the record of employee
+
+ name :Jetson
+
+ eployee Id :16194
+
+ desigination:manager
+
+ enter branch :kayathar
+
+ enter basic pay :500000
+
+ name :Kathir
+
+ eployee Id :16195
+
+ desigination:staff
+
+ enter branch :tirunelgv  veli
+
+ enter basic pay :40000
+
+enter
+1 for highest salary holder
+2 for salary  b/w 3lakh to 6lakhs
+3 for display all managers
+4 for emplyee in branch
+1
+
+ Name :Jetson
+ Empid :16194
+ Desig :manager
+  Branch :kayathar
+ Bpay :500000
+ Netsal is :441000.000000
+enter
+1 for highest salary holder
+2 for salary  b/w 3lakh to 6lakhs
+3 for display all managers
+4 for emplyee in branch
+2
+
+ Name :Jetson
+ Empid :16194
+ Desig :manager
+  Branch :kayathar
+ Bpay :500000
+ Netsal is :441000.000000
+enter
+1 for highest salary holder
+2 for salary  b/w 3lakh to 6lakhs
+3 for display all managers
+4 for emplyee in branch
+3
+
+ Name :Jetson
+ Empid :16194
+ Desig :manager
+  Branch :kayathar
+ Bpay :500000
+ Netsal is :441000.000000
+enter
+1 for highest salary holder
+2 for salary  b/w 3lakh to 6lakhs
+3 for display all managers
+4 for emplyee in branch
+4
+enter the place
+tirunelveli
+
+ Name :Kathir
+ Empid :16195
+ Desig :staff
+  Branch :tirunelveli
+ Bpay :40000
+ Netsal is :36200.000000
+enter
+1 for highest salary holder
+2 for salary  b/w 3lakh to 6lakhs
+3 for display all managers
+4 for emplyee in branch
+5
+invalid input
+[19bcs150@mepcolinux exe8]$exit
+exit
+
+Script done on Wednesday 27 November 2019 03:06:35 PM IST
