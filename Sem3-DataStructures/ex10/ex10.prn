@@ -1,0 +1,375 @@
+Script started on Tue 23 Feb 2021 09:44:29 AM IST
+[19bcs150@mepcolinux ex10]$cat head.h
+#include<iostream>
+#include<stdlib.h>
+#include<string.h>
+using namespace std;
+class Student
+{
+  char name[20];
+  int ID;
+  float cgpa;
+  friend class Graph;
+  public:
+    Student();
+    Student(char*,int,float);
+    Student(const Student&);
+    int getID();
+    void dispDetails();
+};
+
+class Graph
+{
+  public:
+    Graph(int);
+    void getData();
+    void createGraph();
+    void displayAll();
+    void performDFS();
+    void DFS(int);
+    void showVertexData(int);
+    void printAdjacent();
+    void implementConnectedComponent();
+  private:
+    Student * vertices;
+    int noOfVertices;
+    bool *visited;
+    int **adjMatrix;
+};
+[19bcs150@mepcolinux ex10]$cat imp.cpp
+#include"head.h"
+Student::Student()
+{
+  strcpy(name,"null");
+  ID=0;
+  cgpa=0;
+}
+
+Student::Student(char*d,int n,float f)
+{
+  strcpy(name,d);
+  ID=n;
+  cgpa=f;
+}
+
+Student::Student(const Student &f)
+{
+  strcpy(name,f.name);
+  ID=f.ID;
+  cgpa=f.cgpa;
+}
+
+int Student::getID()
+{
+  return ID;
+}
+
+void Student::dispDetails()
+{
+          cout<<ID<<" \t "<<name<<" \t "<<cgpa;
+}
+
+Graph::Graph(int n)
+{
+  noOfVertices = n;
+  vertices = new Student[noOfVertices];
+  adjMatrix = new int*[noOfVertices];
+  for( int i=0; i<noOfVertices; i++ )
+    adjMatrix[i] = new int[noOfVertices];
+  for( int i=0;i<noOfVertices ; i++)
+    for( int j=0; j<noOfVertices ; j++)
+      adjMatrix[i][j] = 0;
+}
+
+void Graph::getData()
+{
+  char name[20];
+  int ID;
+  float f;
+  cout<<"\n Enter Student details : \n\n";
+  for(int i=0;i<noOfVertices;i++)
+  {
+    cout<<"Vertices " << i <<"\n";
+    cout<<"\n Enter the name of the Student : ";
+    cin>>name;
+    cout<<" Enter ID : ";
+    cin>>ID ;
+    cout<<" Enter CGPA: ";
+    cin>>f;
+    Student s(name,ID,f);
+    vertices[i]= s;
+  }
+}
+
+void Graph::createGraph()
+{
+  int edge,v,w;
+  cout<<"\n Enter no of edges in the graph : ";
+  cin>>edge;
+  for(int i=0;i<edge;i++)
+  {
+     cout<<"\n Enter the adjacent vertices\n";
+     cout<<"\n Enter v : ";
+     cin>>v;
+     cout<<"\n Enter w : ";
+     cin>>w;
+     adjMatrix[v][w] =1;
+     adjMatrix[w][v] =1;
+  }
+}
+
+void Graph :: displayAll()
+{
+  cout<<"\n ID \t Name \t CGPA \n";
+  for(int i=0;i<noOfVertices;i++)
+  {
+    cout<<vertices[i].ID<<" \t "<<vertices[i].name<<" \t "<<vertices[i].cgpa<<" \t"<<"\n";
+  }
+}
+
+void Graph :: showVertexData(int i)
+{
+  cout<<"\n Vertice : "<<i<<"\n";
+  cout<<"\n ID \t Name \t CGPA\n";
+  cout<<vertices[i].ID<<" \t "<<vertices[i].name<<" \t"<<vertices[i].cgpa<<"\n";
+}
+
+void Graph::performDFS()
+{
+  visited = new bool[noOfVertices];
+  for( int i=0; i<noOfVertices; i++)
+    visited[i] = false;
+  for( int i=0; i<noOfVertices; i++)
+  {
+    if(!visited[i])
+    DFS(i);
+  }
+}
+
+void Graph::DFS(int i)
+{
+  showVertexData(i);
+  visited[i] = true;
+  for( int j=0; j<noOfVertices; j++)
+  {
+    if( adjMatrix[i][j] == 1){
+      if(!visited[j])
+      DFS(j);
+    }
+  }
+}
+
+void Graph::printAdjacent()
+{
+  for(int i=0;i<noOfVertices;i++)
+    cout<<"\t"<<i;
+  cout<<"\n";
+  for(int i=0; i<noOfVertices ; i++)
+    cout<<"________";
+  cout<<"\n";
+  for( int i=0;i<noOfVertices ; i++)
+  {
+    cout<<i<<" |\t";
+    for( int j=0; j<noOfVertices ; j++)
+      cout<<adjMatrix[i][j]<<"\t";
+    cout<<"\n";
+  }
+}
+
+void Graph::implementConnectedComponent()
+{
+  visited = new bool[noOfVertices];
+  for( int i=0; i<noOfVertices; i++)
+    visited[i] = false;
+  int count = 0;
+  for( int i=0; i<noOfVertices; i++)
+  {
+    if(!visited[i])
+    {
+      cout<<"Connected Component "<<++count<<endl;
+      DFS(i);
+    }
+  }
+}
+[19bcs150@mepcolinux ex10]$cat app.cpp
+#include"head.h"
+int main()
+{
+  int n,ch;
+  cout<<"\n Enter no of vertices : ";
+  cin>>n;
+  Graph g(n);
+  g.getData();
+  g.createGraph();
+  while(true)
+  {
+    cout<<"\n 1.Perform DFS traversal";
+    cout<<"\n 2.Print adjacent matrix";
+    cout<<"\n 3.Find connected component";
+    cout<<"\n 4.Display all Student details";
+    cout<<"\n 5.Exit";
+    cout<<"\n Enter your choice: ";
+    cin>>ch;
+    switch(ch)
+    {
+      case 1:
+      {
+        cout<<"\n DFS traversal : \n";
+        g.performDFS();
+        break;
+      }
+      case 2:
+      {
+          cout<<"\n Adjacent matrix : \n";
+          g.printAdjacent();
+          break;
+      }
+      case 3:
+      {
+         g.implementConnectedComponent();
+         break;
+      }
+      case 4:
+      {
+         g.displayAll();
+         break;
+      }
+      case 5:
+          exit(0);
+      default:
+         cout<<"\n Invalid choice\n";
+    }
+  }
+}
+[19bcs150@mepcolinux ex10]$cat makefile
+ex10.exe: imp.o app.o
+        g++ -o ex10.exe imp.o app.o
+avlimp.o: imp.cpp
+        g++ -c imp.cpp
+app.o: app.cpp
+        g++ -c app.cpp
+[19bcs150@mepcolinux ex10]$./ex10.exe
+
+ Enter no of vertices : 3
+
+ Enter Student details :
+
+Vertices 0
+
+ Enter the name of the Student : Ravi
+ Enter ID : 123
+ Enter CGPA: 9.3
+Vertices 1
+
+ Enter the name of the Student : Mani
+ Enter ID : 124
+ Enter CGPA: 9.2
+Vertices 2
+
+ Enter the name of the Student : Hari
+ Enter ID : 125
+ Enter CGPA: 8.2
+
+ Enter no of edges in the graph : 3
+
+ Enter the adjacent vertices
+
+ Enter v : 0
+
+ Enter w : 1
+
+ Enter the adjacent vertices
+
+ Enter v : 1
+
+ Enter w : 2
+
+ Enter the adjacent vertices
+
+ Enter v : 2
+
+ Enter w : 0
+
+ 1.Perform DFS traversal
+ 2.Print adjacent matrix
+ 3.Find connected component
+ 4.Display all Student details
+ 5.Exit
+ Enter your choice: 1
+
+ DFS traversal :
+
+ Vertice : 0
+
+ ID      Name    CGPA
+123      Ravi   9.3
+
+ Vertice : 1
+
+ ID      Name    CGPA
+124      Mani   9.2
+
+ Vertice : 2
+
+ ID      Name    CGPA
+125      Hari   8.2
+
+ 1.Perform DFS traversal
+ 2.Print adjacent matrix
+ 3.Find connected component
+ 4.Display all Student details
+ 5.Exit
+ Enter your choice: 2
+
+ Adjacent matrix :
+        0       1       2
+________________________
+0 |     0       1       1
+1 |     1       0       1
+2 |     1       1       0
+
+ 1.Perform DFS traversal
+ 2.Print adjacent matrix
+ 3.Find connected component
+ 4.Display all Student details
+ 5.Exit
+ Enter your choice: 3
+Connected Component 1
+
+ Vertice : 0
+
+ ID      Name    CGPA
+123      Ravi   9.3
+
+ Vertice : 1
+
+ ID      Name    CGPA
+124      Mani   9.2
+
+ Vertice : 2
+
+ ID      Name    CGPA
+125      Hari   8.2
+
+ 1.Perform DFS traversal
+ 2.Print adjacent matrix
+ 3.Find connected component
+ 4.Display all Student details
+ 5.Exit
+ Enter your choice: 4
+
+ ID      Name    CGPA
+123      Ravi    9.3
+124      Mani    9.2
+125      Hari    8.2
+
+ 1.Perform DFS traversal
+ 2.Print adjacent matrix
+ 3.Find connected component
+ 4.Display all Student details
+ 5.Exit
+ Enter your choice: 5
+[19bcs150@mepcolinux ex10]$exit
+exit
+
+Script done on Tue 23 Feb 2021 09:44:32 AM IST

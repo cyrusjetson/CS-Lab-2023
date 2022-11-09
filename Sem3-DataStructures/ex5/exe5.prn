@@ -1,0 +1,830 @@
+Script started on Fri 19 Feb 2021 12:45:35 AM IST
+[19bcs150@mepcolinux ex5]$cat L_Stack_L_Queue.h
+class Student
+{
+  string name;
+  int rollNo;
+  float cgpa;
+  public:
+    Student();
+    Student(string,int,float);
+    Student operator=(Student);
+    Student operator=(int);
+    friend istream& operator>>(istream&,Student&);
+    friend ostream& operator<<(ostream&,Student&);
+};
+
+class Node;
+class L_Stack
+{
+  Node *top;
+  public:
+    L_Stack();
+    L_Stack(Node*);
+    L_Stack(const L_Stack&);
+    ~L_Stack();
+    int push(Node *newNode);
+    int pop();
+    int isEmpty();
+    int peak();
+    int makeStackEmpty();
+    void displayStack();
+};
+
+class L_Queue
+{
+  Node *first;
+  public:
+    L_Queue();
+    L_Queue(Node*);
+    L_Queue(const L_Queue&);
+    ~L_Queue();
+    int enqueue(Node *newNode);
+    int dequeue();
+    int isEmpty();
+    int peak();
+    int recent();
+    int makeQueueEmpty();
+    void displayQueue();
+};
+
+class Node
+{
+  friend class L_Stack;
+  friend class L_Queue;
+  Student data;
+  Node *next;
+  public:
+    Node();
+    Node(Student,Node*);
+    Node(const Node& ref);
+    ~Node();
+    void getDetails();
+    void displayDetails();
+};
+
+[19bcs150@mepcolinux ex5]$cat L_Stack_L_Queue_imp.cpp
+#include <iostream>
+using namespace std;
+#include "L_Stack_L_Queue.h"
+Student :: Student()
+{
+  name = "NULL";
+  rollNo = 0;
+  cgpa = 0.0;
+}
+
+Student :: Student (string n,int r,float ra)
+{
+  name = n;
+  rollNo = r;
+  cgpa = ra;
+}
+
+Node :: Node()
+{
+  data = 0;
+  next = NULL;
+}
+
+Node :: Node(Student d,Node* n)
+{
+  data = d;
+  next = n;
+}
+
+Node :: Node(const Node &ref)
+{
+  data = ref.data;
+  next = ref.next;
+}
+
+Node :: ~Node()
+{
+  data = 0;
+  next = NULL;
+}
+
+void Node :: getDetails()
+{
+  cout<<"Enter details:";
+  cin>>data;
+}
+
+void Node :: displayDetails()
+{
+  cout<<data;
+}
+
+Student Student :: operator=(Student x)
+{
+  name = x.name;
+  rollNo = x.rollNo;
+  cgpa = x.cgpa;
+  return *this;
+}
+
+Student Student :: operator=(int x)
+{
+  name = "NULL";
+  rollNo = x;
+  cgpa = x * 0.1;
+  return *this;
+}
+
+istream& operator>>(istream& myin,Student& p)
+{
+  cout<<"\nEnter name: ";
+  myin>>p.name;
+  cout<<"Enter rollNo: ";
+  myin>>p.rollNo;
+  cout<<"Enter CGPA: ";
+  myin>>p.cgpa;
+  return myin;
+}
+
+ostream& operator<<(ostream& myout,Student& p)
+{
+  myout<<"\nName: "<<p.name;
+  myout<<"\nRollNo: "<<p.rollNo;
+  myout<<"\nCGPA: "<<p.cgpa<<"\n";
+  return myout;
+}
+
+L_Stack :: L_Stack()
+{
+  top = NULL;
+}
+
+L_Stack :: L_Stack(Node* f)
+{
+  top = f;
+}
+
+L_Stack :: L_Stack(const L_Stack& ref)
+{
+  top = ref.top;
+}
+
+L_Stack :: ~L_Stack()
+{
+  top = NULL;
+}
+
+int L_Stack :: isEmpty()
+{
+  if(top == NULL)
+    return 1;
+  else
+    return 0;
+}
+
+int L_Stack :: push(Node *newNode)
+{
+  if(isEmpty())
+  {
+    top = newNode;
+  }
+  else
+  {
+    newNode->next = top;
+    top = newNode;
+  }
+  return 1;
+}
+
+int L_Stack :: pop()
+{
+  if(!isEmpty())
+  {
+    cout<<"\nThe below student's details are suceessfully deleted\n ";
+    Node *temp = top;
+    Student deletedElt = temp->data;
+    top = top->next;
+    delete temp;
+    temp = NULL;
+    cout<< deletedElt;
+    return 1;
+  }
+  cout<<"\n Stack is Empty\n";
+  return 0;
+}
+
+int L_Stack :: peak()
+{
+  if(!isEmpty())
+  {
+    cout<<"\nRecently inserted student detail:\n";
+    cout<< top->data;
+    return 1;
+  }
+  cout<<"\n Stack is empty\n";
+  return 0;
+}
+
+void L_Stack :: displayStack()
+{
+  if(!isEmpty())
+  {
+    cout<<"\nAll Details:\n";
+    Node *temp = top;
+    while(temp->next != NULL)
+    {
+      cout<<temp->data<<"\n";
+      temp = temp->next;
+    }
+    cout<<temp->data<<"\n";
+  }
+  else
+    cout<<"\n Stack is empty \n";
+}
+
+int L_Stack :: makeStackEmpty()
+{
+  Node *temp= top;
+  while(temp!=NULL)
+  {
+    temp = top;
+    top = top->next;
+    delete temp;
+    temp=top;
+  }
+  top= NULL;
+}
+
+L_Queue :: L_Queue()
+{
+  first = NULL;
+}
+
+L_Queue :: L_Queue(Node* f)
+{
+  first = f;
+}
+
+L_Queue :: L_Queue(const L_Queue& ref)
+{
+  first = ref.first;
+}
+
+L_Queue :: ~L_Queue()
+{
+  first = NULL;
+}
+
+int L_Queue :: isEmpty()
+{
+  if(first == NULL)
+    return 1;
+  else
+    return 0;
+}
+
+int L_Queue :: enqueue(Node *newNode)
+{
+  if(isEmpty())
+  {
+    first = newNode;
+  }
+  else
+  {
+    Node *temp = first;
+    while(temp->next != NULL)
+    {
+      temp = temp->next;
+    }
+    temp->next = newNode;
+  }
+  return 1;
+}
+
+int L_Queue :: dequeue()
+{
+  if(isEmpty()!=1)
+  {
+    Node *temp = first;
+    Student deletedElt = temp->data;
+    first = first->next;
+    delete temp;
+    temp = NULL;
+    cout<< deletedElt;
+  }
+  else
+    cout<<"\n Queue is Empty\n";
+}
+
+int L_Queue :: peak()
+{
+  if(isEmpty()!=1)
+  {
+    cout<<"The first student's details:";
+    cout<< first->data;
+    return 1;
+  }
+  cout<<"\n Queue is empty\n";
+  return 0;
+}
+
+int L_Queue:: recent()
+{
+  cout<<"\nRecently added student's details:\n";
+  if(isEmpty()!=1)
+  {
+    Node *temp= first;
+    while(temp->next!=NULL)
+    {
+       temp= temp->next;
+    }
+    cout<< temp->data;
+  }
+}
+
+void L_Queue :: displayQueue()
+{
+  if(isEmpty()!=1)
+  {
+    cout<<"\nAll details:\n";
+    Node *temp = first;
+    while(temp->next != NULL)
+    {
+      cout<<temp->data<<"\n";
+      temp = temp->next;
+    }
+    cout<<temp->data<<"\n";
+  }
+  else
+    cout<<"\n Queue is Empty\n";
+}
+
+int L_Queue :: makeQueueEmpty()
+{
+  Node *temp = first;
+  while(temp != NULL)
+  {
+    temp = first;
+    first = first->next;
+    delete temp;
+    temp = first;
+  }
+  first = NULL;
+  return 1;
+}
+[19bcs150@mepcolinux ex5]$cat L_Stack_L_Queue_app.cpp
+#include<iostream>
+#include<string>
+using namespace std;
+#include "L_Stack_L_Queue.h"
+int main()
+{
+  int ch,ch1,ch2,n;
+  Student data,data1;
+  Node *newNode;
+  L_Stack l;
+  L_Queue q;
+  cout<<"\n1.Linked List implementation of Stack ADT";
+  cout<<"\n2.Linked List implementation of Queue ADT\n";
+  cout<<"\nEnter choice:";
+  cin>>ch;
+  if(ch == 1)
+  {
+    cout<<"\nEnter number of student details you like to upload: ";
+    cin>>n;
+    for(int i = 0;i<n;i++)
+    {
+      cout<<"Enter data:\n";
+      cin>>data1;
+      cout<<"\n";
+      newNode = new Node(data1,NULL);
+      l.push(newNode);
+    }
+    while(1)
+    {
+      cout<<"\n---------------------------------\n";
+      cout<<"\tMenu for Stack ADT";
+      cout<<"\n---------------------------------";
+      cout<<"\n1.Insert new student detail";
+      cout<<"\n2.Delete the recently uploaded student's details";
+      cout<<"\n3.Display the recently uploaded student's details";
+      cout<<"\n4.Display all details";
+      cout<<"\n5.Delete all details\n";
+      cout<<"6.Exit\n";
+      cout<<"\nEnter your choice:";
+      cin>>ch1;
+      switch(ch1)
+      {
+        case 1:
+        {
+          cout<<"Enter Student details:\n";
+          cin>>data;
+          cout<<"\n";
+          newNode = new Node(data,NULL);
+          if(l.push(newNode)==1)
+            cout<<"\n Successfully pushed into stack\n";
+          else
+            cout<<"\n Stack is full\n";
+          break;
+       }
+       case 2:
+       {
+         l.pop();
+         break;
+       }
+       case 3:
+       {
+         l.peak();
+         break;
+       }
+       case 4:
+       {
+         l.displayStack();
+         break;
+       }
+       case 5:
+       {
+         cout<<"\n All details are successfully deleted\n";
+         l.makeStackEmpty();
+         break;
+       }
+
+       case 6:return 0;
+    }
+  }
+}
+else if(ch == 2)
+{
+   cout<<"\nEnter how many student details you like to insert: ";
+   cin>>n;
+   for(int i = 0;i<n;i++)
+   {
+     cout<<"Enter data:\n";
+     cin>>data1;
+     cout<<"\n";
+     newNode = new Node(data1,NULL);
+     q.enqueue(newNode);
+   }
+   while(1)
+   {
+     cout<<"\n---------------------------------\n";
+     cout<<" Menu for Queue ADT";
+     cout<<"\n---------------------------------";
+     cout<<"\n1.Insert a student detail";
+     cout<<"\n2.Delete the first student details";
+     cout<<"\n3.show the first student's details";
+     cout<<"\n4.Display all details";
+     cout<<"\n5.Delete all details";
+     cout<<"\n6.Show the recently added student's details";
+     cout<<"\n7.Exit\n";
+     cout<<"\nEnter your choice: ";
+     cin>>ch2;
+     switch(ch2)
+     {
+     case 1:
+     {
+       cout<<"Enter Student details:\n";
+       cin>>data;
+       cout<<"\n";
+       newNode = new Node(data,NULL);
+       q.enqueue(newNode);
+       cout<<"\nSuccessfullly inserted the given student's details\n";
+       break;
+     }
+     case 2:
+     {
+       q.dequeue();
+       break;
+     }
+     case 3:
+     {
+       q.peak();
+       break;
+     }
+     case 4:
+     {
+       q.displayQueue();
+       break;
+     }
+     case 5:
+     {
+       cout<<"\n All details are deleted successfully\n";
+       q.makeQueueEmpty();
+       break;
+     }
+     case 6:
+     {
+       q.recent();
+       break;
+     }
+     case 7: return 0;
+   }
+ }
+}
+}
+
+[19bcs150@mepcolinux ex5]$cat makefile
+exe5.exe:L_Stack_L_Queue_app.o L_Stack_L_Queue_imp.o
+        g++ L_Stack_L_Queue_app.o L_Stack_L_Queue_imp.o -o exe5.exe
+L_Stack_L_Queue_app.o:L_Stack_L_Queue_app.cpp
+        g++ -c L_Stack_L_Queue_app.cpp
+L_Stack_L_Queue_imp.o:L_Stack_L_Queue_imp.cpp
+        g++ -c L_Stack_L_Queue_imp.cpp
+
+[19bcs150@mepcolinux ex5]$./exe5.exe
+
+1.Linked List implementation of Stack ADT
+2.Linked List implementation of Queue ADT
+
+Enter choice:1
+
+Enter number of student details you like to upload: 3
+Enter data:
+
+Enter name: Edward
+Enter rollNo: 123
+Enter CGPA: 9.3
+
+Enter data:
+
+Enter name: Hari
+Enter rollNo: 124
+Enter CGPA: 9.2
+
+Enter data:
+
+Enter name: Mani
+Enter rollNo: 125
+Enter CGPA: 7.8
+
+
+---------------------------------
+        Menu for Stack ADT
+---------------------------------
+1.Insert new student detail
+2.Delete the recently uploaded student's details
+3.Display the recently uploaded student's details
+4.Display all details
+5.Delete all details
+6.Exit
+
+Enter your choice:1
+Enter Student details:
+
+Enter name: Ravi
+Enter rollNo: 126
+Enter CGPA: 8.7
+
+
+ Successfully pushed into stack
+
+---------------------------------
+        Menu for Stack ADT
+---------------------------------
+1.Insert new student detail
+2.Delete the recently uploaded student's details
+3.Display the recently uploaded student's details
+4.Display all details
+5.Delete all details
+6.Exit
+
+Enter your choice:3
+
+Recently inserted student detail:
+
+Name: Ravi
+RollNo: 126
+CGPA: 8.7
+
+---------------------------------
+        Menu for Stack ADT
+---------------------------------
+1.Insert new student detail
+2.Delete the recently uploaded student's details
+3.Display the recently uploaded student's details
+4.Display all details
+5.Delete all details
+6.Exit
+
+Enter your choice:2
+
+The below student's details are suceessfully deleted
+
+Name: Ravi
+RollNo: 126
+CGPA: 8.7
+
+---------------------------------
+        Menu for Stack ADT
+---------------------------------
+1.Insert new student detail
+2.Delete the recently uploaded student's details
+3.Display the recently uploaded student's details
+4.Display all details
+5.Delete all details
+6.Exit
+
+Enter your choice:4
+
+All Details:
+
+Name: Mani
+RollNo: 125
+CGPA: 7.8
+
+
+Name: Hari
+RollNo: 124
+CGPA: 9.2
+
+
+Name: Edward
+RollNo: 123
+CGPA: 9.3
+
+
+---------------------------------
+        Menu for Stack ADT
+---------------------------------
+1.Insert new student detail
+2.Delete the recently uploaded student's details
+3.Display the recently uploaded student's details
+4.Display all details
+5.Delete all details
+6.Exit
+
+Enter your choice:5
+
+ All details are successfully deleted
+
+---------------------------------
+        Menu for Stack ADT
+---------------------------------
+1.Insert new student detail
+2.Delete the recently uploaded student's details
+3.Display the recently uploaded student's details
+4.Display all details
+5.Delete all details
+6.Exit
+
+Enter your choice:6
+[19bcs150@mepcolinux ex5]$./exe5.exe
+
+1.Linked List implementation of Stack ADT
+2.Linked List implementation of Queue ADT
+
+Enter choice:2
+
+Enter how many student details you like to insert: 3
+Enter data:
+
+Enter name: Guna
+Enter rollNo: 123
+Enter CGPA: 8.4
+
+Enter data:
+
+Enter name: Kavi
+Enter rollNo: 124
+Enter CGPA: 9.4
+
+Enter data:
+
+Enter name: Mani
+Enter rollNo: 124
+Enter CGPA: 8.3
+
+
+---------------------------------
+ Menu for Queue ADT
+---------------------------------
+1.Insert a student detail
+2.Delete the first student details
+3.show the first student's details
+4.Display all details
+5.Delete all details
+6.Show the recently added student's details
+7.Exit
+
+Enter your choice: 1
+Enter Student details:
+
+Enter name: Jack
+Enter rollNo: 129
+Enter CGPA: 8.5
+
+
+Successfullly inserted the given student's details
+
+---------------------------------
+ Menu for Queue ADT
+---------------------------------
+1.Insert a student detail
+2.Delete the first student details
+3.show the first student's details
+4.Display all details
+5.Delete all details
+6.Show the recently added student's details
+7.Exit
+
+Enter your choice: 3
+The first student's details:
+Name: Guna
+RollNo: 123
+CGPA: 8.4
+
+---------------------------------
+ Menu for Queue ADT
+---------------------------------
+1.Insert a student detail
+2.Delete the first student details
+3.show the first student's details
+4.Display all details
+5.Delete all details
+6.Show the recently added student's details
+7.Exit
+
+Enter your choice: 2
+
+Name: Guna
+RollNo: 123
+CGPA: 8.4
+
+---------------------------------
+ Menu for Queue ADT
+---------------------------------
+1.Insert a student detail
+2.Delete the first student details
+3.show the first student's details
+4.Display all details
+5.Delete all details
+6.Show the recently added student's details
+7.Exit
+
+Enter your choice: 4
+
+All details:
+
+Name: Kavi
+RollNo: 124
+CGPA: 9.4
+
+
+Name: Mani
+RollNo: 124
+CGPA: 8.3
+
+
+Name: Jack
+RollNo: 129
+CGPA: 8.5
+
+
+---------------------------------
+ Menu for Queue ADT
+---------------------------------
+1.Insert a student detail
+2.Delete the first student details
+3.show the first student's details
+4.Display all details
+5.Delete all details
+6.Show the recently added student's details
+7.Exit
+
+Enter your choice: 6
+
+Recently added student's details:
+
+Name: Jack
+RollNo: 129
+CGPA: 8.5
+
+---------------------------------
+ Menu for Queue ADT
+---------------------------------
+1.Insert a student detail
+2.Delete the first student details
+3.show the first student's details
+4.Display all details
+5.Delete all details
+6.Show the recently added student's details
+7.Exit
+
+Enter your choice: 5
+
+ All details are deleted successfully
+
+---------------------------------
+ Menu for Queue ADT
+---------------------------------
+1.Insert a student detail
+2.Delete the first student details
+3.show the first student's details
+4.Display all details
+5.Delete all details
+6.Show the recently added student's details
+7.Exit
+
+Enter your choice: 7
+
+[19bcs150@mepcolinux ex5]$exit
+exit
+
+Script done on Fri 19 Feb 2021 12:45:44 AM IST
