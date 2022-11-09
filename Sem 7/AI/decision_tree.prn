@@ -1,0 +1,124 @@
+Script started on Thu 15 Sep 2022 09:22:34 AM IST
+[19bcs150@mepcolinux CI]$cat decision_tree.py
+import math
+
+def entropy(y,n):
+    e = -((((y/(y+n)) * math.log(y/(y+n)))/ math.log(2)) + (((n/(y+n)) * math.log(n/(y+n)))/ math.log(2)))
+    return e
+
+
+print("Before split " + str(entropy(9,5)))
+
+import pandas as pd
+data = pd.read_csv("play_tennis.csv")
+data
+counted_dict = dict()
+cdict = dict()
+for j in data:
+
+  for ind,i in enumerate(data[j]):
+
+    if i in cdict:
+      if data[data.columns[-1]][ind] == 'Yes':
+        cdict[i][0] += 1
+      else:
+        cdict[i][1] += 1
+    else:
+        cdict[i] = [0,0]
+        if data[data.columns[-1]][ind] == 'Yes':
+          cdict[i][0] += 1
+        else:
+          cdict[i][1] += 1
+
+  temp = cdict.copy()
+  counted_dict[j] = temp
+  cdict = dict()
+
+counted_dict
+
+
+total_yes = len([x for x in data[data.columns[-1]] if x == 'Yes'])
+total_no = len([x for x in data[data.columns[-1]] if x == 'No'])
+total_no
+
+
+def InfoGain(feature):
+  res = 0
+  flag = 0
+  for k in counted_dict[feature]:
+    yes = counted_dict[feature][k][0]
+    no = counted_dict[feature][k][1]
+    e = 0
+    if yes == no:
+      e = 1
+    elif yes == 0 or no == 0:
+      e = 0
+    else:
+      e = entropy(yes,no)
+
+    res += (((yes+no)/(total_yes + total_no)) * e)
+
+    print("Entropy of "+ k + " in " + feature+ " = "+str(res))
+    flag = 1
+  return entropy(total_yes,total_no) - res
+
+
+max = -9999
+root = ""
+
+for feature in data[data.columns[1:len(data.columns)-1]]:
+  res = InfoGain(feature)
+
+  print("Information Gain of " + feature + " =" + str(res))
+  if res > max:
+    max = res
+    root = feature
+print(str(root) + " is the root node with the maximum IG of "+ str(max))
+
+
+[19bcs150@mepcolinux CI]python decision_tree.py
+
+Before split 0.9402859586706309
+
+{'day': {'D1': [0, 1],
+  'D2': [0, 1],
+  'D3': [1, 0],
+  'D4': [1, 0],
+  'D5': [1, 0],
+  'D6': [0, 1],
+  'D7': [1, 0],
+  'D8': [0, 1],
+  'D9': [1, 0],
+  'D10': [1, 0],
+  'D11': [1, 0],
+  'D12': [1, 0],
+  'D13': [1, 0],
+  'D14': [0, 1]},
+ 'outlook': {'Sunny': [2, 3], 'Overcast': [4, 0], 'Rain': [3, 2]},
+ 'temp': {'Hot': [2, 2], 'Mild': [4, 2], 'Cool': [3, 1]},
+ 'humidity': {'High': [3, 4], 'Normal': [6, 1]},
+ 'wind': {'Weak': [6, 2], 'Strong': [3, 3]},
+ 'play': {'No': [0, 5], 'Yes': [9, 0]}}
+
+5
+
+Entropy of Sunny in outlook = 0.346768069448096
+Entropy of Overcast in outlook = 0.346768069448096
+Entropy of Rain in outlook = 0.693536138896192
+Information Gain of outlook =0.24674981977443888
+Entropy of Hot in temp = 0.2857142857142857
+Entropy of Mild in temp = 0.6792696431662097
+Entropy of Cool in temp = 0.9110633930116763
+Information Gain of temp =0.029222565658954647
+Entropy of High in humidity = 0.4926140680171258
+Entropy of Normal in humidity = 0.7884504573082896
+Information Gain of humidity =0.15183550136234136
+Entropy of Weak in wind = 0.46358749969093305
+Entropy of Strong in wind = 0.8921589282623617
+Information Gain of wind =0.04812703040826927
+
+outlook is the root node with the maximum IG of 0.24674981977443888
+
+[19bcs150@mepcolinux CI]$exit
+exit
+Script done on Thu 15 Sep 2022 09:22:36 AM IST

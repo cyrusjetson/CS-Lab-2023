@@ -1,0 +1,85 @@
+Script started on Thu 15 Sep 2022 09:23:28 AM IST
+[19bcs150@mepcolinux CI]$cat KNN.py
+import pandas as pd
+import math
+
+
+data = pd.read_csv("Data.csv")
+print(data)
+
+
+k1 = int(input("Enter The Number of nearest neighbors : "))
+n = list(map(float,input("Enter The Data to predict : ").split (" ")))
+unwanted_columns =input("Enter the unwanted column names like id : ").split(" ")
+target = input("Enter The Target Column Name : ")
+print(unwanted_columns)
+
+
+if unwanted_columns[0]!='':
+  for i in unwanted_columns:
+    data=data.drop(i,axis=1)
+target_data = data[target]
+data = data.drop(target,axis=1)
+data_columns = data.columns
+
+
+distance = {}
+for i in range(len(data)):
+  value = 0
+  k=0
+  for j in data_columns:
+    value+= (((n[k]-data[j][i])**2))
+    k+=1
+  distance[i]=math.sqrt(value)
+#print(distance)
+# distance.sort()
+
+
+newlist = sorted(distance.items(), key=lambda x:x[1])
+distance = dict(newlist)
+#print(len(distance))
+
+
+while(len(distance)>k1):
+  distance.popitem()
+print(distance)
+print(target_data.unique())
+
+
+unique = {}
+for i in target_data.unique():
+  unique[i]=0
+for key in distance.keys():
+  unique[target_data[key]] = unique[target_data[key]]+1
+print(unique)
+
+
+newlist = sorted(unique.items(), key=lambda x:x[1])
+unique = dict(newlist)
+lastkey = list(unique.keys())[-1]
+print("Predicted "+target+ " : "+lastkey)
+
+
+[19bcs150@mepcolinux CI]$python KNN.py
+
+X1  X2         X3
+0   7   7  Excellent
+1   7   3       Good
+2   4   6       Good
+3   5   5       Good
+4   1   1      Worst
+
+
+Enter The Number of nearest neighbors : 3
+Enter The Data to predict : 4 3
+Enter the unwanted column names like id :
+Enter The Target Column Name : X3
+['']
+{3: 2.23606797749979, 1: 3.0, 2: 3.0}
+['Excellent' 'Good' 'Worst']
+{'Excellent': 0, 'Good': 3, 'Worst': 0}
+Predicted X3 : Good
+
+[19bcs150@mepcolinux CI]$exit
+exit
+Script done on Thu 15 Sep 2022 09:23:30 AM IST

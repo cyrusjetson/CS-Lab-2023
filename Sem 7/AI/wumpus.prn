@@ -1,0 +1,241 @@
+Script started on Thu 15 Sep 2022 09:24:23 AM IST
+[19bcs150@mepcolinux CI]$cat Wumpus_World.py
+
+class Block :
+    NOT_PRESENT = 0
+    UNSURE = 1
+    hasBreeze = False
+    hasPit = False
+    pitStatus = UNSURE
+    hasStench = False
+    hasWumpus = False
+    wumpusStatus = UNSURE
+    hasGold = False
+    isVisited = False
+
+
+class WumpusWorld :
+    maze = None
+    n = 0
+
+
+    def addPit( r,  c) :
+        WumpusWorld.maze[r][c].hasPit = True
+        if (r >= 1) :
+            WumpusWorld.maze[r - 1][c].hasBreeze = True
+        if (r <= (WumpusWorld.n - 2)) :
+            WumpusWorld.maze[r + 1][c].hasBreeze = True
+        if (c >= 1) :
+            WumpusWorld.maze[r][c - 1].hasBreeze = True
+        if (c <= (WumpusWorld.n - 2)) :
+            WumpusWorld.maze[r][c + 1].hasBreeze = True
+
+
+    def addWumpus( r,  c) :
+        WumpusWorld.maze[r][c].hasWumpus = True
+        if (r >= 1) :
+            WumpusWorld.maze[r - 1][c].hasStench = True
+        if (r <= (WumpusWorld.n - 2)) :
+            WumpusWorld.maze[r + 1][c].hasStench = True
+        if (c >= 1) :
+            WumpusWorld.maze[r][c - 1].hasStench = True
+        if (c <= (WumpusWorld.n - 2)) :
+            WumpusWorld.maze[r][c + 1].hasStench = True
+
+
+    def addGold( r,  c) :
+        WumpusWorld.maze[r][c].hasGold = True
+
+
+    def printMaze( r,  c) :
+        i = 0
+        while (i < WumpusWorld.n) :
+            j = 0
+            while (j < WumpusWorld.n) :
+                charToPrint = '-'
+                if (r == i and c == j) :
+                    charToPrint = '*'
+                elif(WumpusWorld.maze[i][j].hasPit) :
+                    charToPrint = 'O'
+                elif(WumpusWorld.maze[i][j].hasWumpus) :
+                    charToPrint = 'X'
+                elif(WumpusWorld.maze[i][j].hasGold) :
+                    charToPrint = '$'
+                print(str(charToPrint) + "\t", end ="")
+                j += 1
+            print()
+            i += 1
+
+
+def main():
+
+    print("Enter the order of the maze: ", end ="")
+    WumpusWorld.n = int(input())
+    WumpusWorld.maze = [[None] * (WumpusWorld.n) for _ in range(WumpusWorld.n)]
+    i = 0
+    while (i < WumpusWorld.n) :
+        WumpusWorld.maze[i] = [None] * (WumpusWorld.n)
+        j = 0
+        while (j < WumpusWorld.n) :
+            WumpusWorld.maze[i][j] = Block()
+            j += 1
+        i += 1
+    print("\nEnter the number of pits: ", end ="")
+    pits = int(input())
+    i = 0
+    while (i < pits) :
+        print("Enter the location of pit " + str((i + 1)) + ": ", end ="")
+        a,b = input().split(" ")
+        WumpusWorld.addPit(WumpusWorld.n - int(a), int(b) - 1)
+        i += 1
+    print("\nEnter the location of wumpus: ", end ="")
+    d,e = input().split(" ")
+    WumpusWorld.addWumpus(WumpusWorld.n - int(d), int(e) - 1)
+    print("\nEnter the location of gold: ", end ="")
+    f,g = input().split(" ")
+    WumpusWorld.addGold(WumpusWorld.n - int(f), int(g) - 1)
+    print("\nEnter the starting location: ", end ="")
+    h,i = input().split(" ")
+    r = WumpusWorld.n - int(h)
+    c = int(i) - 1
+    rPrev = -1
+    cPrev = -1
+    moves = 0
+    print("\nInitial state:")
+    WumpusWorld.printMaze(r, c)
+    while (not WumpusWorld.maze[r][c].hasGold) :
+        WumpusWorld.maze[r][c].isVisited = True
+        WumpusWorld.maze[r][c].pitStatus = Block.NOT_PRESENT
+        WumpusWorld.maze[r][c].wumpusStatus = Block.NOT_PRESENT
+        if (not WumpusWorld.maze[r][c].hasBreeze) :
+            if (r >= 1 and WumpusWorld.maze[r - 1][c].pitStatus == Block.UNSURE) :
+                WumpusWorld.maze[r - 1][c].pitStatus = Block.NOT_PRESENT
+            if (r <= (WumpusWorld.n - 2) and WumpusWorld.maze[r + 1][c].pitStatus == Block.UNSURE) :
+                WumpusWorld.maze[r + 1][c].pitStatus = Block.NOT_PRESENT
+            if (c >= 1 and WumpusWorld.maze[r][c - 1].pitStatus == Block.UNSURE) :
+                WumpusWorld.maze[r][c - 1].pitStatus = Block.NOT_PRESENT
+            if (c <= (WumpusWorld.n - 2) and WumpusWorld.maze[r][c + 1].pitStatus == Block.UNSURE) :
+                WumpusWorld.maze[r][c + 1].pitStatus = Block.NOT_PRESENT
+        if (not WumpusWorld.maze[r][c].hasStench) :
+            if (r >= 1 and WumpusWorld.maze[r - 1][c].wumpusStatus == Block.UNSURE) :
+                WumpusWorld.maze[r - 1][c].wumpusStatus = Block.NOT_PRESENT
+            if (r <= (WumpusWorld.n - 2) and WumpusWorld.maze[r + 1][c].wumpusStatus == Block.UNSURE) :
+                WumpusWorld.maze[r + 1][c].wumpusStatus = Block.NOT_PRESENT
+            if (c >= 1 and WumpusWorld.maze[r][c - 1].wumpusStatus == Block.UNSURE) :
+                WumpusWorld.maze[r][c - 1].wumpusStatus = Block.NOT_PRESENT
+            if (c <= (WumpusWorld.n - 2) and WumpusWorld.maze[r][c + 1].wumpusStatus == Block.UNSURE) :
+                WumpusWorld.maze[r][c + 1].wumpusStatus = Block.NOT_PRESENT
+
+        foundNewPath = False
+
+        if (r >= 1 and not ((r - 1) == rPrev and c == cPrev) and WumpusWorld.maze[r - 1][c].isVisited
+ == False and WumpusWorld.maze[r - 1][c].pitStatus == Block.NOT_PRESENT and 
+WumpusWorld.maze[r - 1][c].wumpusStatus == Block.NOT_PRESENT) :
+            rPrev = r
+            cPrev = c
+            r -= 1
+            foundNewPath = True
+        elif(r <= (WumpusWorld.n - 2) and not ((r + 1) == rPrev and c == cPrev) 
+and WumpusWorld.maze[r + 1][c].isVisited == False and WumpusWorld.maze[r + 1][c].pitStatus == 
+Block.NOT_PRESENT and WumpusWorld.maze[r + 1][c].wumpusStatus == Block.NOT_PRESENT) :
+            rPrev = r
+            cPrev = c
+            r += 1
+            foundNewPath = True
+        elif(c >= 1 and not (r == rPrev and (c - 1) == cPrev) and 
+WumpusWorld.maze[r][c - 1].isVisited == False and WumpusWorld.maze[r][c - 1].pitStatus == 
+Block.NOT_PRESENT and WumpusWorld.maze[r][c - 1].wumpusStatus == Block.NOT_PRESENT) :
+            rPrev = r
+            cPrev = c
+            c -= 1
+            foundNewPath = True
+        elif(c <= (WumpusWorld.n - 2) and not (r == rPrev and (c + 1) == cPrev) 
+and WumpusWorld.maze[r][c + 1].isVisited == False and WumpusWorld.maze[r][c + 1].pitStatus 
+== Block.NOT_PRESENT and WumpusWorld.maze[r][c + 1].wumpusStatus == Block.NOT_PRESENT) :
+            rPrev = r
+            cPrev = c
+            c += 1
+            foundNewPath = True
+
+        if (not foundNewPath) :
+            temp1 = rPrev
+            temp2 = cPrev
+            rPrev = r
+            cPrev = c
+            r = temp1
+            c = temp2
+
+        moves += 1
+        print("\n\nMove " + str(moves) + ":")
+        WumpusWorld.printMaze(r, c)
+        if (moves > WumpusWorld.n * WumpusWorld.n) :
+            print("\nNo solution found!")
+            break
+    if (moves <= WumpusWorld.n * WumpusWorld.n) :
+        print("\nFound gold in " + str(moves) + " moves.")
+
+if __name__=="__main__":
+    main()
+
+[19bcs150@mepcolinux CI]$python Wumpus_World.py
+
+Enter the order of the maze: 4
+
+Enter the number of pits: 3
+Enter the location of pit 1: 1 3
+Enter the location of pit 2: 3 3
+Enter the location of pit 3: 4 4
+
+Enter the location of wumpus: 3 1
+
+Enter the location of gold: 3 2
+
+Enter the starting location: 1 1
+
+Initial state:
+-       -       -       O
+X       $       O       -
+-       -       -       -
+*       -       O       -
+
+
+Move 1:
+-       -       -       O
+X       $       O       -
+*       -       -       -
+-       -       O       -
+
+
+Move 2:
+-       -       -       O
+X       $       O       -
+-       -       -       -
+*       -       O       -
+
+
+Move 3:
+-       -       -       O
+X       $       O       -
+-       -       -       -
+-       *       O       -
+
+
+Move 4:
+-       -       -       O
+X       $       O       -
+-       *       -       -
+-       -       O       -
+
+
+Move 5:
+-       -       -       O
+X       *       O       -
+-       -       -       -
+-       -       O       -
+
+Found gold in 5 moves.
+
+
+[19bcs150@mepcolinux CI]$exit
+exit
+Script done on Thu 15 Sep 2022 09:24:27 AM IST

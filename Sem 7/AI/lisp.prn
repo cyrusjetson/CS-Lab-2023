@@ -1,0 +1,64 @@
+Script started on Tue 01 Nov 2022 02:41:05 PM IST
+
+[19bcs150@mepcolinux AI]$cat lisp.txt
+
+code:
+circle->
+(princ "Enter Radius: ")
+(defvar radius (read))
+(defvar area(* 3.14  radius radius ))
+(princ radius)
+(terpri)
+(princ  "Area: ")
+(write area)
+output:
+Enter Radius: 5
+Area: 78.5
+
+factorial->
+(setf fact 1)
+(defun facto(n)
+    ( loop for x from 2 to n
+           do(setq fact (* x fact))
+           )
+    (print fact)
+    )
+(princ "Enter a number:")
+( FACTO (read))
+
+output:
+Enter a number:6
+720
+
+fibonacci series:
+(setq first -1)
+(setq second 1)
+;(setq n(read))
+(defun fibo(n)
+    (terpri)
+    (princ "Enter n value: ")
+    (setq n (read))
+
+    ( loop for x from 1 to n
+           do( setq third (+ first second))
+           ;( print third)
+           do( setq first second)
+           ( print third)
+           do( setq second third)
+
+           )
+    )
+( fibo 10 )
+
+Output:
+Enter n value: 5
+0
+1
+1
+2
+3
+
+[19bcs150@mepcolinux AI]$exit
+exit
+
+Script done on Tue 01 Nov 2022 02:41:07 PM IST
