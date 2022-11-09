@@ -1,0 +1,213 @@
+Script started on Wednesday 18 September 2019 03:21:09 PM IST
+[19bcs150@mepcolinux exe2]$cd exe2a
+[19bcs150@mepcolinux exe2a]$cat colour.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe2a
+ *find colour
+ *28.8.2019*/
+#include<stdio.h>
+int findcolour(char ch);
+[19bcs150@mepcolinux exe2a]$cat colourimp.c
+#include"colour.h"
+int findcolour(char ch)
+{
+if(ch=='r')
+return 1;
+else if(ch=='g')
+return 2;
+else if(ch=='b')
+return 3;
+else if(ch=='y')
+return 4;
+else if(ch=='w')
+return 5;
+else
+return 0;
+}
+[19bcs150@mepcolinux exe2a]$cat colourapp.c
+#include"colour.h"
+void main()
+{
+  char ch;
+  int ans;
+  printf("Enter the colour(r,g,b,y,w)\n");
+  scanf("%c",&ch);
+  ans=findcolour(ch);
+  if (ans==1)
+  printf("Red\n");
+  else if (ans==2)
+  printf("Green\n");
+  else if (ans==3)
+  printf("Blue\n");
+  else if (ans==4)
+  printf("Yellow\n");
+  else if (ans==5)
+  printf("White\n");
+  else
+  printf("Enter the valid input\n");
+}
+[19bcs150@mepcolinux exe2a]$cat makefile
+colour.exe:colourimp.o colourapp.o
+	cc colourimp.o colourapp.o -o colour.exe
+colourimp.o:colourimp.c
+	cc -c colourimp.c
+colourapp.o:colourapp.c
+	cc -c colourapp.c
+[19bcs150@mepcolinux exe2a]$./colour.exe
+Enter the colour(r,g,b,y,w)
+r
+Red
+[19bcs150@mepcolinux exe2a]$./colour.exe
+Enter the colour(r,g,b,y,w)
+k
+Enter the valid input
+[19bcs150@mepcolinux exe2a]$cd ..
+[19bcs150@mepcolinux exe2]$cd exe2b
+[19bcs150@mepcolinux exe2b]$cat findcalc.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe2b
+ *findcalc using if else
+ *28.8.2019*/
+#include<stdio.h>
+int findcalc(int,int,char);
+[19bcs150@mepcolinux exe2b]$cat findcalcimp.c
+#include"findcalc.h"
+int findcalc(int a,int b,char c)
+{
+if(c=='+')
+return a+b;
+else if(c=='-')
+return a-b;
+else if(c=='/')
+return a/b;
+else if(c=='*')
+return a*b;
+else if(c=='%')
+return a%b; 
+}
+[19bcs150@mepcolinux exe2b]$cat findcalcapp.c
+#include"findcalc.h"
+int main()
+{
+int a,b;
+int ans;
+char c;
+printf("Enter the operation to be perform\n");
+printf("Add(+)\n");
+printf("Sustract(-)\n");
+printf("Divide(/)\n");
+printf("Multiplication(*)\n");
+printf("Modulas(%)\n");
+scanf("%c",&c);
+printf("Enter the numbers\n");
+scanf("%d%d",&a,&b);
+ans=findcalc(a,b,c);
+printf("Answer is %d\n",ans);
+}
+[19bcs150@mepcolinux exe2b]$cat makefile
+findcalc.exe:findcalcimp.o findcalcapp.o
+	cc findcalcimp.o findcalcapp.o -o findcalc.exe
+findcalcimp.o:findcalcimp.c
+	cc -c findcalcimp.c
+findcalcapp.o:findcalcapp.c
+	cc -c findcalcapp.c
+[19bcs150@mepcolinux exe2b]$./findcalc.exe
+Enter the operation to be perform
+Add(+)
+Sustract(-)
+Divide(/)
+Multiplication(*)
+Modulas(%)
++
+Enter the numbers
+3
+2
+Answer is 5
+[19bcs150@mepcolinux exe2b]$./findcalc.exe
+Enter the operation to be perform
+Add(+)
+Sustract(-)
+Divide(/)
+Multiplication(*)
+Modulas(%)
+-
+Enter the numbers
+5
+3
+Answer is 2
+[19bcs150@mepcolinux exe2b]$cd ..
+[19bcs150@mepcolinux exe2]$cd exe2c
+[19bcs150@mepcolinux exe2c]$cat switchcalc.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe2c
+ *switch calc
+ *28.8.2019*/
+#include<stdio.h>
+int op(int,int,int);
+[19bcs150@mepcolinux exe2c]$cat switchcalcimp.c
+#include"switchcalc.h"
+int op(int a,int b,int c)
+{
+switch(c)
+{
+case 1:
+return a+b;
+case 2:
+return a-b;
+case 3:
+return a*b;
+case 4:
+return a/b;
+case 5:
+return a%b;
+}
+}
+[19bcs150@mepcolinux exe2c]$cat switchcalcapp.c
+#include"switchcalc.h"
+int main()
+{
+int a,b,c,n;
+printf("Enter the two numbers\n");
+scanf("%d%d",&a,&b);
+printf("1.Add\n2.Substract\n3.Multiply\n4.Divition\n5.Modulas\n");
+printf("Enter the operation to be perform\n");
+scanf("%d",&c);
+n=op(a,b,c);
+printf("Answer is %d\n",n);
+}
+[19bcs150@mepcolinux exe2c]$cat makefile
+switchcalc.exe:switchcalcimp.o switchcalcapp.o
+	cc switchcalcimp.o switchcalcapp.o -o switchcalc.exe
+switchcalcimp.o:switchcalcimp.c
+	cc -c switchcalcimp.c
+switchcalcapp.o:switchcalcapp.c
+	cc -c switchcalcapp.c
+[19bcs150@mepcolinux exe2c]$./switchcalc.exe
+Enter the two numbers
+3
+2
+1.Add
+2.Substract
+3.Multiply
+4.Divition
+5.Modulas
+Enter the operation to be perform
+1
+Answer is 5
+[19bcs150@mepcolinux exe2c]$./switchcalc.exe
+Enter the two numbers
+3
+4
+1.Add
+2.Substract
+3.Multiply
+4.Divition
+5.Modulas
+Enter the operation to be perform
+3
+Answer is 12
+[19bcs150@mepcolinux exe2c]$exit
+Script done on Wednesday 18 September 2019 03:34:28 PM IST
