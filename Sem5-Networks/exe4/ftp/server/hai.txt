@@ -1,3 +1,0 @@
-Jetson Cyrus
-19bcs150
-CSE C
