@@ -1,0 +1,104 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[19bcs150@mepcolinux sharedmem]$./a.out
+The shared memory id: 163855
+Process attached at 0x7fa26cbff000
+Enter some data to write to shared memory
+hello
+
+Data written into memory[19bcs150@mepcolinux sharedmem]$cd read/
+[19bcs150@mepcolinux read]$./a
+-bash: ./a: No such file or directory
+[19bcs150@mepcolinux read]$./a.out
+Shared memory ID:163855
+Process attached at 0x7f33a1347000
+The reversed data from memory is:
+olleh
+[19bcs150@mepcolinux read]$cd ..
+[19bcs150@mepcolinux sharedmem]$cd ..
+[19bcs150@mepcolinux os]$ls
+[19bcs150@mepcolinux os]$cd ipcque/
+[19bcs150@mepcolinux ipcque]$./a.out
+Enter   Message : helloeveryone
+Recived Message : enoyreveolleh
+[19bcs150@mepcolinux ipcque]$
+[19bcs150@mepcolinux ipcque]$cd ..
+[19bcs150@mepcolinux os]$cd disc/
+[19bcs150@mepcolinux disc]$./a.out
+
+Enter disk size      : 199
+
+Enter no of requests : 7
+
+Enter Request queue  : 93 176 42 148 27 14 180
+
+Enter R/W head position : 55
+
+FCFS Scheduling Algorithm
+
+55      93      176     42      148     27      14      180
+Total Seek time :716
+
+SSTF Scheduling Algorithm
+
+55      180     176     148     93      42      27      14
+Total Seek time : 882
+
+SCAN Scheduling Algorithm
+55      42      27      14      0       93      148     176     180
+Total Seek time : 235
+55      93      148     176     180     14      27      42
+Total Seek time : 319
+
+[19bcs150@mepcolinux disc]$cd ..
+[19bcs150@mepcolinux os]$
+[19bcs150@mepcolinux os]$cd dd
+[19bcs150@mepcolinux dd]$./a.out
+Enter number of vertices : 6
+Enter number of edges  : 7
+
+Enter edge 1's source and destination  : 0 3
+Enter edge 2's source and destination  : 0 1
+Enter edge 3's source and destination  : 1 4
+Enter edge 4's source and destination  : 3 1
+Enter edge 5's source and destination  : 4 2
+Enter edge 6's source and destination  : 2 5
+Enter edge 7's source and destination  : 5 1
+
+DEADLOCK is due to the edge 5--->1
+
+DEADLOCK detected
+[19bcs150@mepcolinux dd]$./a.out
+Enter number of vertices : 6
+Enter number of edges  : 7
+
+Enter edge 1's source and destination  : 0 3
+Enter edge 2's source and destination  : 0 1
+Enter edge 3's source and destination  : 1 2
+Enter edge 4's source and destination  : 1 4
+Enter edge 5's source and destination  : 1 5
+Enter edge 6's source and destination  : 3 1
+Enter edge 7's source and destination  : 4 2
+
+No DEADLOCK detected
+[19bcs150@mepcolinux dd]$cd ..
+[19bcs150@mepcolinux os]$
