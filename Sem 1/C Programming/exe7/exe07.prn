@@ -1,0 +1,140 @@
+Script started on Wednesday 30 October 2019 04:16:42 PM IST
+[19bcs150@mepcolinux exe7]$cd exe7a
+[19bcs150@mepcolinux exe7a]$cat pointer.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe7a
+ *sum&average
+ *23.10.2019*/
+#include<stdio.h>
+#include<malloc.h>
+int sum(int *,int);
+float avg(int *,int);
+[19bcs150@mepcolinux exe7a]$cat pointerimp.c
+#include"pointer.h"
+int sum(int *p,int n)
+{
+int i,s=0;
+for(i=0;i<n;i++)
+if(*(p+i)>=0)
+s+=*(p+i);
+return s;
+}
+float avg(int *p,int n)
+{
+float s=0.0;
+int s1=0,i,c=0;
+for(i=0;i<n;i++)
+{
+if(*(p+i)<0)
+{
+s1+=*(p+i);
+c++;
+}
+}
+s=(1.0*s1)/c;
+return s;
+}
+[19bcs150@mepcolinux exe7a]$cat pointerapp.c
+#include"pointer.h"
+void main()
+{
+int *p,n,i,k=0;
+float a=0;
+printf("\n Enter the number of elements \n");
+scanf("%d",&n);
+p=(int *)malloc(n*sizeof(int));
+printf("Enter the elements\n");
+for(i=0;i<n;i++)
+scanf("%d",p+i);
+k=sum(p,n);
+a=avg(p,n);
+printf("\n The Sum is : %d",k);
+printf("\n The average is : %f\n",a);
+}
+[19bcs150@mepcolinux exe7a]$cat makefile
+pointer.exe: pointerimp.o pointerapp.o
+	cc -o pointer.exe pointerimp.o pointerapp.o
+pointerimp.o: pointerimp.c
+	cc -c pointerimp.c
+pointerapp.o: pointerapp.c
+	cc -c pointerapp.c
+[19bcs150@mepcolinux exe7a]$./pointer.exe
+
+ Enter the number of elements 
+5
+Enter the elements
+-3
+-4
+2
+5
+6
+
+ The Sum is : 13
+ The average is : -3.500000
+[19bcs150@mepcolinux exe7a]$cd ..
+[19bcs150@mepcolinux exe7]$cd exe7b
+[19bcs150@mepcolinux exe7b]$cat ap.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe7b
+ *sum
+ *23.10.2019*/
+#include<stdio.h>
+#include<malloc.h>
+int sum(int *[10],int,int);
+[19bcs150@mepcolinux exe7b]$cat apimp.c
+#include"ap.h"
+int sum(int *a[10],int c,int ch)
+{
+int i,c1=0;
+for(i=0;i<c;i++)
+c1+=*(a[ch-1]+i);
+return c1;
+}
+[19bcs150@mepcolinux exe7b]$cat apapp.c
+#include"ap.h"
+void main()
+{
+int *p[10],i,j,r,c,ch,k=0;
+printf("\n Enter the row and Column size \n");
+scanf("%d",&r);
+scanf("%d",&c);
+for(i=0;i<r;i++)
+p[i]=(int *)malloc(c*sizeof(int));
+printf("\n Enter the matrix :\n");
+for(i=0;i<r;i++)
+for(j=0;j<c;j++)
+scanf("%d",p[i]+j);
+printf("\n Enter the row number to sum :\n");
+scanf("%d",&ch);
+k=sum(p,c,ch);
+printf("\n The sum of %d row is :%d\n",ch,k);
+}
+[19bcs150@mepcolinux exe7b]$cat makefile
+ap.exe: apimp.o apapp.o
+	cc -o ap.exe apimp.o apapp.o
+apimp.o: apimp.c
+	cc -c apimp.c
+apapp.o: apapp.c
+	cc -c apapp.c
+[19bcs150@mepcolinux exe7b]$./ap.exe
+
+ Enter the row and Column size 
+2
+3
+
+ Enter the matrix :
+2
+3
+2
+3
+5
+6
+
+ Enter the row number to sum :
+2
+
+ The sum of 2 row is :14
+[19bcs150@mepcolinux exe7b]$exit
+Script done on Wednesday 30 October 2019 04:21:19 PM IST

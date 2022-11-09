@@ -1,0 +1,175 @@
+Script started on Wednesday 27 November 2019 02:41:36 PM IST
+[19bcs150@mepcolinux ex10]$cd ex10a
+[19bcs150@mepcolinux ex10a]$cat car.h
+/* Roll no. : 19bcs150
+ * Name     : J.Jetson Cyrus
+ * Date     : 13/11/2019
+ * Ex name  : get car information and display car which cost 5 lakhs
+ * Ex no.   : ex10a */
+#include<stdio.h>
+#include<stdlib.h>
+#include<ctype.h>
+void car_details(int);
+void car_recprint(int);
+
+[19bcs150@mepcolinux ex10a]$cat carimp.c
+#include"car.h"
+void car_details(int n)
+{
+FILE *p;
+char name[20];
+int speed;
+long cost;
+p=fopen("car.txt","w");
+int i;
+for(i=0;i<n;i++)
+{
+printf("\n Enter the name of car:");
+scanf("%s",name);
+printf("\n Enter the speed:");
+scanf("%d",&speed);
+printf("\n Enter the price:");
+scanf("%ld",&cost);
+fprintf(p,"%s  %d %ld\n",name,speed,cost);
+}
+fclose(p);
+}
+void car_recprint(int n)
+{
+FILE *p;
+int i,c=0;
+char name[20];
+int speed;
+long cost;
+p=fopen("car.txt","r");
+for(i=0;i<n;i++)
+{
+fscanf(p,"%s %d %ld\n",name,&speed,&cost);
+if(cost>=500000)
+printf("%s %d %ld\n",name,speed,cost);
+else
+c++;
+}
+if(c==n)
+printf("\n no records are above 500000\n");
+fclose(p);
+}
+[19bcs150@mepcolinux ex10a]$cat carapp.c
+#include"car.h"
+int main()
+{
+int n;
+printf("enter no. of cars\n");
+scanf("%d",&n);
+car_details(n);
+printf("details of car which cost more than 5lakhs\n");
+car_recprint(n);
+}
+[19bcs150@mepcolinux ex10a]$cat makefile
+car.exe : carimp.o carapp.o
+	cc carimp.o carapp.o -o car.exe
+carimp.o : carimp.c
+	cc -c carimp.c
+carapp.o : carapp.c
+	cc -c carapp.c
+[19bcs150@mepcolinux ex10a]$./car.exe
+enter no. of cars
+3
+
+ Enter the name of car:bmw
+
+ Enter the speed:676
+
+ Enter the price:564654
+
+ Enter the name of car:benz
+
+ Enter the speed:2112
+
+ Enter the price:656565
+
+ Enter the name of car:audi
+
+ Enter the speed:545
+
+ Enter the price:56465
+details of car which cost more than 5lakhs
+bmw 676 564654
+benz 2112 656565
+[19bcs150@mepcolinux ex10a]$cd ..
+[19bcs150@mepcolinux ex10]$cd ex10b
+[19bcs150@mepcolinux ex10b]$cat name.h
+/* Roll no. : 19bcs150
+ * Name     : J.Jetson Cyrus
+ * Date     : 13/11/2019
+ * ex name  : collecting number of names 
+ * ex no.   : ex10b */
+
+#include<stdio.h>
+#include<ctype.h>
+int get_name();
+[19bcs150@mepcolinux ex10b]$cat nameimp.c
+#include"name.h"
+int get_name()
+{
+FILE *n=fopen("name.txt","w");
+char name[20];
+int cnt=0;
+do
+{
+printf("enter \n");
+scanf("%s",name);
+fprintf(n,"%s\n",name);
+cnt=cnt+1;
+}while(strcmp(name,"end")!=0);
+fclose(n);
+n=fopen("name.txt","r");
+printf("\n     the names are\n");
+fgets(name,20,n);
+while(!feof(n))
+{
+printf("%s\n",name);
+fgets(name,20,n);
+}
+printf("there are %d number of name\n",cnt-1);
+}
+[19bcs150@mepcolinux ex10b]$cat nameapp.c
+#include"name.h"
+int main()
+{
+printf("enter the names\n");
+printf("enter 'end' to exit\n");
+get_name();
+}
+[19bcs150@mepcolinux ex10b]$cat makefile
+name.exe : nameimp.o nameapp.o
+	cc nameimp.o nameapp.o -o name.exe
+nameimp.o : nameimp.c
+	cc -c nameimp.c
+nameapp.o : nameapp.c
+	cc -c nameapp.c
+[19bcs150@mepcolinux ex10b]$./name.exe
+enter the names
+enter 'end' to exit
+enter 
+raj
+enter 
+saravanan
+enter 
+cyrus
+enter 
+end
+
+     the names are
+raj
+
+saravanan
+
+cyrus
+
+end
+
+there are 3 number of name
+[19bcs150@mepcolinux ex10b]$exit
+exit
+Script done on Wednesday 27 November 2019 02:44:15 PM IST

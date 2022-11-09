@@ -1,0 +1,242 @@
+Script started on Wednesday 30 October 2019 03:10:19 PM IST
+[19bcs150@mepcolinux exe6]$cd exe6a
+[19bcs150@mepcolinux exe6a]$cat sort.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe6a
+ *Desending sorting
+ *9.10.2019*/
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+void sort(char[][10],int);
+[19bcs150@mepcolinux exe6a]$cat sortimp.c
+#include"sort.h"
+void sort(char n[][10],int na)
+{
+char t[10];
+int i,j;
+for(i=0;i<na-1;i++)
+for(j=i+1;j<na;j++)
+if(strcmp(n[i],n[j])<0)
+{
+strcpy(t,n[i]);
+strcpy(n[i],n[j]);
+strcpy(n[j],t);
+}
+}
+[19bcs150@mepcolinux exe6a]$cat sortapp.c
+#include"sort.h"
+void main()
+{
+char names[10][10];
+int i,n;
+printf("\tSorting Of Names\n");
+printf("\nEnter the no of names you want to enter\n");
+scanf("%d",&n);
+printf("Enter the names\n");
+for(i=0;i<n;i++)
+scanf("%s",names[i]);
+sort(names,n);
+printf("The names after sorted are:\n");
+for(i=0;i<n;i++)
+printf("%s ",names[i]);
+printf("\n");
+}
+[19bcs150@mepcolinux exe6a]$cat makefile
+sort.exe:sortimp.o sortapp.o
+	cc -o sort.exe sortimp.o sortapp.o
+sortimp.o:sortimp.c
+	cc -c sortimp.c
+sortapp.o:sortapp.c
+	cc -c sortapp.c
+[19bcs150@mepcolinux exe6a]$./sort.exe
+	Sorting Of Names
+
+Enter the no of names you want to enter
+3
+Enter the names
+jetson
+kathir
+mani
+The names after sorted are:
+mani kathir jetson 
+[19bcs150@mepcolinux exe6a]$cd ..
+[19bcs150@mepcolinux exe6]$cd exe6b
+[19bcs150@mepcolinux exe6b]$cat menu.h
+/*J.Jetson Cyrus
+ *19BCS150
+ *exe6b
+ *Built in string funtions
+ *9.10.2019*/
+#include<stdio.h>
+void copy(char[],char[]);
+void cat(char[],char[]);
+int len(char[]);
+void reverse(char[]);
+[19bcs150@mepcolinux exe6b]$cat menuimp.c
+#include"menu.h"
+int len(char str1[])
+{
+        int i=0;
+        while(str1[i]!='\0')
+                i++;
+        return i;
+}
+void copy(char str1[],char str2[])
+{
+        int i,n=0;
+        while(str1[n]!='\0')
+        n++;
+        for(i=0;i<n;i++)
+                str1[i]=str2[i];
+}
+void cat(char str1[],char str2[])
+{
+        int i,n=0;
+        while(str1[n]!='\0')
+        n++;
+        for(i=0;i<n;i++)
+                str1[n+i]=str2[i];
+}
+void reverse(char str1[])
+{
+        int i,n=0,j;
+        char temp[30];
+        while(str1[n]!='\0')
+                n++;
+        for(i=0;i<n;i++)
+                temp[i]=str1[i];
+        for(i=--n,j=0;i>=0;i--,j++)
+                str1[j]=temp[i];
+}
+[19bcs150@mepcolinux exe6b]$cat menuapp.c
+#include "menu.h"
+int main()
+{
+ int ch,count=0;
+ char str1[40],str2[40];
+ do
+ {
+  printf("\nEnter the respective numbers for their respective functions ");
+  printf("\n1.String Length\n2.String Copy");
+  printf("\n3.String Concat\n4.String Reverse");
+  printf("\n5.Exit\n");
+  printf("\nEnter your choice\n");
+  scanf("%d",&ch);
+
+  switch (ch)
+  {
+   case 1:
+    printf("\nEnter the string : ");
+    scanf("%s",str1);
+    count=len(str1);
+    printf("Length = %d",count);
+   break;
+   case 2:
+    printf("\nEnter String1:");
+    scanf("%s",str1);
+    printf("Enter String2:");
+    scanf("%s",str2);
+    copy(str1,str2);
+    printf("\nThe copied string is : ");
+    puts(str2);
+   break;
+   case 3:
+    printf("\nEnter String1:");
+    scanf("%s",str1);
+    printf("Enter String2:");
+    scanf("%s",str2);
+    cat(str1,str2);
+    printf("\nThe concatenated string is : ");
+    puts(str1);
+   break;
+   case 4:
+    printf("\nEnter the string : ");
+    scanf("%s",str1);
+    reverse(str1);
+    printf("\nThe reversed string is :");
+    puts(str1);
+   break;
+   case 5:
+    exit(0);
+  }
+}
+ while(ch<6);
+}
+[19bcs150@mepcolinux exe6b]$cat makefile
+menu.exe:menuimp.o menuapp.o
+	cc -o menu.exe menuimp.o menuapp.o
+menuimp.o:menuimp.c
+	cc -c menuimp.c
+menuapp.o: menuapp.c
+	cc -c menuapp.c
+[19bcs150@mepcolinux exe6b]$./menu.exe
+
+Enter the respective numbers for their respective functions 
+1.String Length
+2.String Copy
+3.String Concat
+4.String Reverse
+5.Exit
+
+Enter your choice
+1
+
+Enter the string : jetson
+Length = 6
+Enter the respective numbers for their respective functions 
+1.String Length
+2.String Copy
+3.String Concat
+4.String Reverse
+5.Exit
+
+Enter your choice
+2
+
+Enter String1:jetson 
+Enter String2:cyrusw
+
+The copied string is : cyrusw
+
+Enter the respective numbers for their respective functions 
+1.String Length
+2.String Copy
+3.String Concat
+4.String Reverse
+5.Exit
+
+Enter your choice
+3
+
+Enter String1:once
+Enter String2:twice
+
+The concatenated string is : oncetwic
+
+Enter the respective numbers for their respective functions 
+1.String Length
+2.String Copy
+3.String Concat
+4.String Reverse
+5.Exit
+
+Enter your choice
+4
+
+Enter the string : jetson
+
+The reversed string is :nostej
+
+Enter the respective numbers for their respective functions 
+1.String Length
+2.String Copy
+3.String Concat
+4.String Reverse
+5.Exit
+
+Enter your choice
+5
+[19bcs150@mepcolinux exe6b]$exit
+Script done on Wednesday 30 October 2019 03:15:40 PM IST
